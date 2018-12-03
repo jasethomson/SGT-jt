@@ -14,7 +14,6 @@ class Model{
 	}
 
 	remove( student ){
-		debugger;
 		var studentIndex = this.students.indexOf( student );
 		this.students.splice( studentIndex, 1);
 	}
