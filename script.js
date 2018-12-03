@@ -5,8 +5,21 @@
 /**
  * Listen for the document to load and initialize the application
  */
-$(document).ready();
+$(document).ready( startApp );
 
+var SGT;
+function startApp(){
+	SGT = new View({
+		addButton: $("#addButton"),
+		cancelButton: $("#cancelButton"),
+		nameInput: $("#studentName"),
+		courseInput: $("#studentCourse"),
+		gradeInput: $("#studentGrade"),
+		displayArea: $("#displayArea"),
+		averageArea: $(".avgGrade")
+	});
+	SGT.addEventHandlers();
+}
 /**
  * Define all global variables here.  
  */
