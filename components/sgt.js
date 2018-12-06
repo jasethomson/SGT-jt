@@ -4,6 +4,7 @@
 class SGT_template{
 	/* constructor - sets up sgt object 
 	params: (object) elementConfig - all pre-made dom elements used by the app
+	purpose: instantiates a model and stores it in the object
 	return: undefined
 	*/
 	constructor( elementConfig ){

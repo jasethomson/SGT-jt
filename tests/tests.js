@@ -70,7 +70,7 @@ function studentrecord_tests(){
 		}
 
 	} catch( error ){
-		displayMessage(['error with Student Record render(): ',error],'error');
+		displayMessage(['error with Student Record handleDelete(): ',error],'error');
 		return false;
 	}
 	displayMessage('handleDelete method and delete button clicking passed','message');
@@ -107,7 +107,7 @@ function studentrecord_tests(){
 			throw( 'returned object from getData did not have correct value for the key "grade", expected 100 but got ' + data.grade);
 		}
 	} catch( error ){
-		displayMessage(['error with Student Record render(): ',error],'error');
+		displayMessage(['error with Student Record getData(): ',error],'error');
 		return false;
 	}
 	displayMessage('getData method passed','message');
@@ -133,25 +133,359 @@ function studentrecord_tests(){
 
 
 	} catch( error ){
-		displayMessage(['error with Student Record render(): ', error],'error');
+		displayMessage(['error with Student Record update(): ', error],'error');
 		return false;
 	}
 	displayMessage('update method passed','message');
+	displayMessage('StudentRecord passed all tests','green');
 	return true;
 }
 
+function model_tests(){
+	displayMessage('--Model tests', 'header');
+	if(typeof Model === 'undefined' ){
+		displayMessage('Model object does not exist.  Check components/model.js and make sure the object is defined still and there are no syntax errors in the console');
+		return false;
+	}
+	var testModel = new Model();
+	if(testMethod( testModel, 'getNextID')) return
+	try{
+		var id = testModel.getNextID();
+		if(id !== 1){
+			throw( 'Exepected 1 as first ID from getNextID, got'+id);
+		}
+		id = testModel.getNextID();
+		if(id !== 2){
+			throw( 'Expected 2 as next ID from getNextID, got '+id);
+		}
+	} catch( error ){
+		displayMessage(['error with Model getNextID: ',error],'error');
+		return false;
+	}
+	displayMessage('constructor and getNextID methods passed','message');
 
-$(document).ready( function(){
+	if(testMethod( testModel, 'add')) return
+	try{
+		testModel = new Model(); //reset the model for testing;
+		var count = testModel.add('student1', 'course1', 50);
+		if(count !== 1){
+			throw( 'added a student, expected 1 as returned count, got'+count);
+		}
+		var count2 = testModel.add('student2', 'course2', 51);
+		if(count2 !== 2){
+			throw( 'added a student, expected 2 as returned count, got'+count);
+		}
+	} catch( error ){
+		displayMessage(['error with Model getNextID: ',error],'error');
+		return false;
+	}
+	displayMessage('add method passed','message');
+	if(testMethod( testModel, 'getAllStudents')) return
+	try{
+		
+		var studentList = testModel.getAllStudents();
+		if(!Array.isArray( studentList )){
+			throw('method should return an array, returned a ' + typeof studentList)
+		}
+		if(studentList.length!==2){
+			throw('There should be 2 items in the array, there were '+studentList.length);
+		}
+		if(studentList[0].constructor !== StudentRecord){
+			throw('method must return an array of StudentRecord, the contained pieces were made by a ' + studentList.constructor)
+		}
+		if(studentList[0].getData().name !== 'student1'){
+			throw('first student added did not have a name of "student1", had '+ studentList[0].getData().name);
+		}
+		if(studentList[1].getData().name !== 'student2'){
+			throw('second student added did not have a name of "student1", had '+ studentList[1].getData().name);
+		}
+		if(studentList[0].getData().course !== 'course1'){
+			throw('first student added did not have a course of "course1", had '+ studentList[0].getData().course);
+		}
+		if(studentList[1].getData().course !== 'course2'){
+			throw('second student added did not have a course of "course2", had '+ studentList[1].getData().course);
+		}
+		if(studentList[0].getData().grade !== 50){
+			throw('first student added did not have a grade of 50, had '+ studentList[0].getData().grade);
+		}
+		if(studentList[1].getData().grade !== 51){
+			throw('second student added did not have a grade of 51, had '+ studentList[1].getData().grade);
+		}
+	} catch( error ){
+		displayMessage(['error with getAllStudents : ',error],'error');
+		return false;
+	}
+	displayMessage('getAllStudents method passed','message');
+	//REMOVE
+	if(testMethod( testModel, 'remove')) return
+	try{
+		var studentListCopy = studentList.slice();
+		var result = testModel.remove(studentListCopy[0]);
+		if(result!==true){
+			throw('Should have returned true after successfully removing student, returned',result);
+		}
+		var newList = testModel.getAllStudents();
+		if(newList.length !== 1){
+			throw('There should be 1 student left, but count is '+ newList.length);
+		}
+		if(newList[0] !== studentListCopy[1]){
+			throw('Remaining item in model should be '+JSON.stringify(studentListCopy[1])+ ' but is '+JSON.stringify(newList[0]));
+		}
+		result = testModel.remove('haha');
+		if(result!==false){
+			throw('Tried to remove "haha" from student list, should have gotten false, but got '+result);
+		}
+		result = testModel.remove(studentListCopy[0]);
+		if(result!==false){
+			throw('Tried to remove a student that was already removed.  Should have gotten false, but got '+ result);
+		}
+	} catch( error ){
+		displayMessage(['error with remove : ',error],'error');
+		return false;
+	}
+	displayMessage('remove method passed','message');
+	if(testMethod( testModel, 'getStudentByField')) return
+	try{
+		var result = testModel.getStudentByField('name','student2');
+		if(result !== studentListCopy[1]){
+			throw('Tried to fetch student by name "student2", should have gotten '+JSON.stringify(studentListCopy[1])+', but got ' + result);
+		}
+		result = testModel.getStudentByField('grade',51);
+		if(result !== studentListCopy[1]){
+			throw('Tried to fetch student by grade 52, should have gotten '+JSON.stringify(studentListCopy[1])+', but got ' + result);
+		}
+		result = testModel.getStudentByField('splunge', 'student2');
+		if(result !== -1){
+			throw('Tried to find a student by a field that does not exist, expected -1, but got '+result);
+		}
+		result = testModel.getStudentByField('name','chuck');
+		if(result !== -1){
+			throw('Tried to find a student by a name called "chuck" that does not exist, should have gotten -1, but got '+result);
+		}
+	} catch( error ){
+		displayMessage(['error with getStudentByField : ',error],'error');
+		return false;
+	}
+	displayMessage('getStudentByField method passed','message');
+	if(testMethod( testModel, 'calculateGradeAverage')) return
+	try{
+		result = testModel.calculateGradeAverage();
+		if(result!==51){
+			throw('Tried to get average of 1 student with a grade of 51.  Expected average of 51.  Got '+ result);
+		}
+		testModel.add('student3', 'course3', 51);
+		result = testModel.calculateGradeAverage();
+		if(result!==51){
+			throw('Tried to get average of 2 students both with a grade of 51.  Expected average of 51.  Got '+ result);
+		}
+		testModel.add('student4', 'course4', 100);
+		result = testModel.calculateGradeAverage();
+		if(result!==(51+51+100)/3){
+			throw('Tried to get average of 51, 51, and 100.  Expected average of 67.33(repeating).  Got '+ result);
+		}		
+	} catch( error ){
+		displayMessage(['error with calculateGradeAverage : ',error],'error');
+		return false;
+	}
+	displayMessage('calculateGradeAverage method passed','message');
+	displayMessage('Model passed all tests','green');
+	return true;
+}
+
+function sgt_tests(){
+	displayMessage('--SGT tests', 'header');
+	if(typeof SGT_template === 'undefined' ){
+		displayMessage('SGT object does not exist.  Check components/sgt.js and make sure the object is defined still and there are no syntax errors in the console');
+		return false;
+	}
+	var elementList = {
+		addButton: "#addButton",
+		cancelButton: "#cancelButton",
+		nameInput: "#studentName",
+		courseInput: "#studentCourse",
+		gradeInput: "#studentGrade",
+		displayArea: "#displayArea",
+		averageArea: ".avgGrade"
+	}
+	var elementSelectors = {
+		addButton: $("#addButton"),
+		cancelButton: $("#cancelButton"),
+		nameInput: $("#studentName"),
+		courseInput: $("#studentCourse"),
+		gradeInput: $("#studentGrade"),
+		displayArea: $("#displayArea"),
+		averageArea: $(".avgGrade")
+	}
+	var testSGT = new SGT_template( elementSelectors );
+	if(testMethod( testSGT, 'addEventHandlers')) return
+	try{
+		testSGT.addEventHandlers();
+		var eventData = $._data( $("#addButton")[0], "events" );
+		for(var i=0; i< eventData.click.length; i++){
+			if( eventData.click[i].handler.name.indexOf('handleAdd') !== -1){
+				break;
+			}
+		}
+		if(i===eventData.click.length){
+			throw('Could not find handleAdd as a click handler on the add button');
+		}
+		eventData = $._data( $("#cancelButton")[0], "events" );
+		for(var i=0; i< eventData.click.length; i++){
+			if( eventData.click[i].handler.name.indexOf('handleCancel') !== -1){
+				break;
+			}
+		}
+		if(i===eventData.click.length){
+			throw('Could not find handleAdd as a click handler on the add button');
+		}
+	} catch( error ){
+		displayMessage(['error with SGT addEventHandlers: ',error],'error');
+		return false;
+	}
+	displayMessage('addEventHandlers method passed','message');
+
+	if(testMethod( testSGT, 'clearInputs')) return
+	try{
+		elementSelectors.nameInput.val('test');
+		elementSelectors.courseInput.val('test');
+		elementSelectors.gradeInput.val('test');
+		testSGT.clearInputs();
+		if(elementSelectors.nameInput.val()!==''){
+			throw('clearInputs didn\'t clear the name input');
+		}
+		if(elementSelectors.courseInput.val()!==''){
+			throw('clearInputs didn\'t clear the course input');
+		}
+		if(elementSelectors.gradeInput.val()!==''){
+			throw('clearInputs didn\'t clear the grade input');
+		}
+		displayMessage('clearInputs cleared all inputs','message');	
+	} catch( error ){
+		displayMessage(['error with SGT clearInputs: ',error],'error');
+		return false;
+	}
+	displayMessage('clearInputs method passed','message');
+
+	try{
+		elementSelectors.nameInput.val('test');
+
+		testSGT.handleCancel();
+		if(elementSelectors.nameInput.val()!==''){
+			throw('handleCancel didn\'t clear the name input');
+		}
+		if(elementSelectors.courseInput.val()!==''){
+			throw('handleCancel didn\'t clear the course input');
+		}
+		if(elementSelectors.gradeInput.val()!==''){
+			throw('handleCancel didn\'t clear the grade input');
+		}
+		displayMessage('handleCancel cleared all inputs','message');
+		elementSelectors.nameInput.val('test');
+		elementSelectors.cancelButton.click();
+		if(elementSelectors.nameInput.val()!==''){
+			throw('cancel button click did not clear the inputs');
+		}		
+	} catch( error ){
+		displayMessage(['error with SGT handleCancel: ',error],'error');
+		return false;
+	}
+	displayMessage('handleCancel method passed','message');
+	//HANDLE displayAverage
+	if(testMethod( testSGT, 'displayAverage')) return
+	try{
+		testSGT.displayAverage();
+		var text = elementSelectors.averageArea.text();
+		if(text !== '00'){ //there are 2 display areas
+			throw('expected to see 0 in both average display areas, got ' + text.substr(0,text.length/2))
+		}
+		testSGT.model.add('dude', 'hockey', 0);
+		testSGT.model.add('dudette', 'thermonuclear war', 100);
+		testSGT.displayAverage();
+		var text = elementSelectors.averageArea.text();
+		if(text !== '5050'){ //there are 2 display areas
+			throw('expected to see 50 in both average display areas, got ' + text.substr(0,text.length/2))
+		}
+	} catch( error ){
+		displayMessage(['error with SGT displayAverage: ',error],'error');
+		return false;
+	}
+	displayMessage('displayAverage method passed','message');
+	//HANDLE displayAllStudents
+	if(testMethod( testSGT, 'displayAllStudents')) return
+	try{
+		testSGT.displayAllStudents();
+		var trs = elementSelectors.displayArea.find("tr");
+		if(trs.length!==2){
+			throw('Expected to see 2 student records displayed, got ' + trs.length);
+		}
+		var firstName = trs.eq(0).find('td:first-child').text()
+		if(firstName!=='dude'){
+			throw('Expected first student\'s display name to be "dude", found '+firstName)
+		}
+		var secondName = trs.eq(1).find('td:first-child').text()
+		if(secondName!=='dudette'){
+			throw('Expected second student\'s display name to be "dudette", found '+firstName)
+		}
+		testSGT.displayAllStudents();
+		var trs2 = elementSelectors.displayArea.find("tr");
+		if(trs2.length!==2){
+			if(trs2.length === 4){
+				throw('Expected to see 2 student records displayed, got 4.  Did you forget to clear the display area?');
+			}
+			throw('Expected to see 2 student records displayed, got ' + trs2.length);
+		}
+		var secondGrade = trs.eq(1).find('td:nth-child(3)').text()
+		if(secondGrade!=='100'){
+			throw('Expected second student\'s display grade to be 100, found '+secondGrade);
+		}
+	} catch( error ){
+		displayMessage(['error with SGT displayAllStudents: ',error],'error');
+		return false;
+	}
+	displayMessage('displayAllStudents method passed','message');
+	//HANDLE ADD
+	if(testMethod( testSGT, 'handleAdd')) return
+	try{
+		elementSelectors.nameInput.val('testStudent1');
+		elementSelectors.courseInput.val('testCourse1');
+		elementSelectors.gradeInput.val(100);
+		var pre_students = testSGT.model.getAllStudents().slice();	
+		testSGT.handleAdd();
+		if(elementSelectors.nameInput.val()!==''){
+			throw('handleAdd did not invoke clearInputs or did not clear the inputs after add');
+		}
+		var post_students = testSGT.model.getAllStudents();
+		elementSelectors.nameInput.val('testStudent2');
+		elementSelectors.courseInput.val('testCourse2');
+		elementSelectors.gradeInput.val(100);
+		var post_students = testSGT.model.getAllStudents();
+		elementSelectors.addButton.click();
+		if(post_students.length !== pre_students.length + 2){
+			throw('clicking on the add button did not save the data to a new student in the model');
+		}
+		var text = elementSelectors.averageArea.text();
+		if(text !== '7575'){ //there are 2 display areas
+			throw('expected to see 75 in both average display areas, got ' + text.substr(0,text.length/2))
+		}		
+	} catch( error ){
+		displayMessage(['error with SGT handleAdd: ',error],'error');
+		return false;
+	}
+	displayMessage('handleAdd method passed','message');
+
+	displayMessage('SGT passed all tests','green');
+	return true;
+}
+
+function startTests(){
 	intiateTestDisplay();
-	var testFunctions = ['studentrecord_tests'];
-
+	var testFunctions = ['studentrecord_tests', 'model_tests', 'sgt_tests'];
 	var i = 0;
 	while( i<testFunctions.length && window[testFunctions[i]]() === true){
 		i++;
 	}
-
-	displayMessage(' All tests passed! ', 'header');
-})
+	displayMessage(' All tests passed! ', 'header');	
+}
 
 
 function displayMessage(message, type='error'){
@@ -168,7 +502,7 @@ function displayMessage(message, type='error'){
 	} else {
 		console.log(wholeMessage);
 	}
-	element.appendTo('#errorArea');
+	$("#errorArea").prepend(element);
 }
 
 function testMethod( object, method ){

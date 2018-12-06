@@ -65,8 +65,7 @@ class StudentRecord{
 		(number): grade
 	*/
 	getData(){
-		class Stuff{}
-		return this.data
+		return this.data;
 	}
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
 		name : the student's name

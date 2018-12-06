@@ -1,0 +1,20 @@
+
+
+#errorArea .header{
+	color: blue;
+	font-weight: bold;
+}
+#errorArea .message {
+	color: green;
+}
+#errorArea .error{
+	color: black;
+	background-color: red;
+}
+
+#errorArea .green{
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+

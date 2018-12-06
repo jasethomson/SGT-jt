@@ -28,13 +28,13 @@ class Model{
 		(string) name: the student's name
 		(string) course: the student's course
 		(number) grade: the student's grade
-	return: undefined
+	return: (number) the current number of students in the list
 	*/
 	add( newName, newCourse, newGrade ){
 		var id = this.getNextID();
 		var student = new StudentRecord( id, newName, newCourse, newGrade, this.remove );
 		this.students.push( student );
-
+		return this.students.length;
 	}
 	/* remove - called from the student object when the student is removing itself, so the model can also remove it from the list
 	purpose - finds the given student in the model's list, and removes it
@@ -82,10 +82,12 @@ class Model{
 		iterate through all students
 		sum up their grades
 		divide by the number of grades to get the average and return it
+		Will return 0 if there are no students
 	params: none
 	return: (number) the average grade of all students
 	*/
 	calculateGradeAverage(){
+		if(this.students.length===0){ return 0}
 		var sum = 0;
 		for( var i=0; i< this.students.length; i++){
 			sum += this.students[i].getData().grade;
