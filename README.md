@@ -8,9 +8,7 @@ includes HTML structure that is formatted with bootstrap.  For this version, you
 - Start with the v.1lf branch and work from there.
 
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#getting-started">Getting Started</a>
-- <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#scope">View Scope</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#design">View Design</a>
-- <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#assignments---aka-criteria-for-success-on-this-version-of-the-project">View Assignments</a>
 
 ## Version .25 - student view
 #### Description
