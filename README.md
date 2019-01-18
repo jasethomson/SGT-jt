@@ -92,6 +92,8 @@ Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and no
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v2.0lf#getting-started" target="_blank">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v2.0lf#scope" target="_blank">View Scope</a>
 
+##### Don't forget to check out the additional "error checking" section in the scope above!  This can be critical to a good user experience!
+
 ##### startup instructions
 - start at v1.0
 - make a new branch v2.0
