@@ -9,6 +9,11 @@ includes HTML structure that is formatted with bootstrap.  For this version, you
 
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#getting-started">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#design">View Design</a>
+##### startup instructions
+- start at v.1lf
+- make a new branch v.1
+- perform work on v.1
+- no need to do pull request
 
 ## Version .25 - student view
 #### Description
@@ -20,6 +25,12 @@ Version .25 starts the base functionality of the application.  You'll start with
     - getData - get the student's current stored data
     - render - create the dom elements for the object, store them, and return them
     - handleDelete - remove the dom element associated with this object and notify this object's parent of a pending deletion
+
+##### startup instructions
+- start at v.1
+- make a new branch v.25
+- perform work on v.25
+- no need to do pull request
 
 ## Version .5 - sgt model
 #### Description
@@ -33,6 +44,12 @@ Version .5 adds functionality for the model, which will store student record obj
     - remove - removes the indicated student from the data storage
     - getStudentByField - takes in a given field/value, searches the student records, and returns the matching student record
     - calculateGradeAverage - goes through all students and calculates the average amongst all the grades
+
+##### startup instructions
+- start at v.25
+- make a new branch v.5
+- perform work on v.5
+- no need to do pull request
 
 ### version.75 - sgt controller
 #### Description
@@ -49,6 +66,12 @@ Version .75 adds the main controller object that ties in the model and the view.
     - displayAllStudents - show all the student records from the model on the display area
     - displayAverage - have the model calculate the average and display that average
 
+##### startup instructions
+- start at v.5
+- make a new branch v.75
+- perform work on v.75
+- do a pull request for v.75
+
 ## Version 1.0
 #### Description
 Version 1.0 picks up where 0.5 left off. You will now be populating records from a database via the LearningFuze SGT API. This version will only be pulling entries, you will not be adding anything to the database for this version. You should still be able to add entries locally as you did before.
@@ -56,12 +79,24 @@ Version 1.0 picks up where 0.5 left off. You will now be populating records from
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v1.0lf#getting-started" target="_blank">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v1.0lf#scope" target="_blank">View Scope</a>
 
+##### startup instructions
+- start at v.75
+- make a new branch v1.0
+- perform work on v1.0
+- no need to do a pull request
+
 ## Version 2.0
 #### Description
 Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and now you will be adding Create and Delete functionality. You will now be adding records to a database via the LearningFuze SGT API.
 
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v2.0lf#getting-started" target="_blank">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v2.0lf#scope" target="_blank">View Scope</a>
+
+##### startup instructions
+- start at v1.0
+- make a new branch v2.0
+- perform work on v2.0
+- do a pull request for v2.0
 
 ## Version 3.0 - not done now
 #### Description
