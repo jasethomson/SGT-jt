@@ -7,8 +7,8 @@ includes HTML structure that is formatted with bootstrap.  For this version, you
 
 - Start with the v.1lf branch and work from there.
 
-- <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#getting-started">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v.1lf#design">View Design</a>
+
 ##### startup instructions
 - start at v.1lf
 - make a new branch v.1
@@ -74,7 +74,7 @@ Version .75 adds the main controller object that ties in the model and the view.
 
 ## Version 1.0
 #### Description
-Version 1.0 picks up where 0.5 left off. You will now be populating records from a database via the LearningFuze SGT API. This version will only be pulling entries, you will not be adding anything to the database for this version. You should still be able to add entries locally as you did before.
+Version 1.0 picks up where 0.75 left off. You will now be populating records from a database via the LearningFuze SGT API. This version will only be pulling entries, you will not be adding anything to the database for this version. You should still be able to add entries locally as you did before.
 
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v1.0lf#getting-started" target="_blank">Getting Started</a>
 - <a href="https://github.com/Learning-Fuze/SGT/tree/v1.0lf#scope" target="_blank">View Scope</a>
