@@ -1,6 +1,6 @@
 
 
-class StudentRecord{
+class Student{
 	/* constructor - take in params for the student and save them,
 		create storage for student dom elements
 		store the deletion callback from the model

@@ -1,139 +1,98 @@
-function studentrecord_tests(){
+function student_tests(){
 	displayMessage('--Student Records Test', 'header');
-	if(typeof StudentRecord === 'undefined' ){
-		displayMessage('StudentRecord object does not exist.  Check components/studentrecord.js and make sure the object is defined still and there are no syntax errors in the console');
+	if(typeof Student === 'undefined' ){
+		displayMessage('Student object does not exist.  Check components/student.js and make sure the object is defined still and there are no syntax errors in the console');
 		return false;
 	}
 	var testVal = false;
 	function testCallback(input){
 		if(input === undefined){
-			throw 'click callback for delete button did not provide an argument of the StudentRecord that was clicked.  returned undefined'
+			throw new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned undefined');
 		}
-		if(input.constructor !== StudentRecord){
-			throw 'click callback for delete button did not provide an argument of the StudentRecord that was clicked.  returned ' + JSON.stringify( input );
+		if(input.constructor !== Student){
+			throw( new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned ' + JSON.stringify( input )));
 		}
 		testVal = true;
 	}
-	var student = new StudentRecord(1,'name','course',100,testCallback);
-	var student2 = new StudentRecord(1,'name','course',100,testCallback);
-	if(testMethod( student, 'render')) return
-	try{
-		var dom = student.render();
-		var dom2 = student2.render();
-		if(dom.prop('tagName')!=='TR'){
-			throw 'render() did not return a table row (TR)'
-		}
-		var children = dom.find('td');
-		if( children.length !== 4){
-			throw 'render() should return a TR with 4 TDs, found ' + children.length;
-		}
-		if( children[0].innerHTML !== 'name'){
-			throw `constructor was given name of "name", first TD should have had "name".  It had ${children[0].innerHTML}`
-		}
-		if( children[1].innerHTML !== 'course'){
-			throw `constructor was given name of "course", first TD should have had "course".  It had ${children[1].innerHTML}`
-		}
-		if( children[2].innerHTML !== '100'){
-			throw `constructor was given name of 100, first TD should have had 100.  It had ${children[2].innerHTML}`
-		}
-		var button = $(children[3]).find('button');
-		if( button.length !== 1){
-			throw '4th TD should have had a button in it, could not find one';
-		}
-		if( button.text() !== 'delete' ){
-			throw '4th TD button should have had text of DELETE, it had ' + button.text();
-		}
-	} catch( error ){
-		displayMessage(['error with Student Record render(): ',error],'error');
-		return false;
-	}
-	displayMessage('constructor and render methods passed','message');
-	if(testMethod( student, 'handleDelete')) return
-	try{
-		$("body").append(dom2);
-		student2.handleDelete();		
-		if(!testVal ){
-			throw( 'callback function passed into constructor was not called upon calling handleDelete.');
-		}
-		if( document.querySelector('body').contains(dom2[0])){
-			throw( 'dom elements for StudentRecord were not removed with calling handleDelete');
-		}
-		testVal = false;
-		$("body").append(dom);
-		button.click();
-		
-		if(!testVal ){
-			throw( 'callback function passed into constructor was not called upon clicking the delete button.');
-		}
-		if( document.querySelector('body').contains(dom[0])){
-			throw( 'dom elements for StudentRecord were not removed with the click of the delete button');
-		}
+	var testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100};
+	var testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50'};
+	var student = new Student(testStudent1.id,testStudent1.name,testStudent1.course,testStudent1.grade,testCallback);
+	var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
 
-	} catch( error ){
-		displayMessage(['error with Student Record handleDelete(): ',error],'error');
-		return false;
-	}
-	displayMessage('handleDelete method and delete button clicking passed','message');
-	var student = new StudentRecord(1,'John','Math','100',testCallback);
 	if(testMethod( student, 'getData')) return
 	try{
-		
-		data = 	student.getData();
-		if(data === undefined ){
-			throw( 'callback function passed into constructor was not called upon calling handleDelete.');
+		var result = student.getData();
+		var result2 = student2.getData();
+		if(!(result instanceof Object)){
+			throw new Error('getData did not return an standard object like it was supposed to')
 		}
-		if(data.constructor !== Object){
-			throw( 'returned object from getData was not a native object, it was of type '  + data.constructor.name);
+		if(result.id!==testStudent1.id){
+			throw new Error(`student was created with an id of ${testStudent1.id}, but getData returned an id of ${result.id}`);
 		}
-		if(data.name === undefined){
-			throw( 'returned object from getData did not have the key "name"');
+		if(result.name!==testStudent1.name){
+			throw new Error(`student was created with an name of ${testStudent1.name1}, but getData returned a name of ${result.name}`);
 		}
-		if(data.name !== 'John'){
-			throw( 'returned object from getData did not have correct value for the key "name", expected "John" but got ' + data.name);
+		if(result.course!==testStudent1.course){
+			throw new Error(`student was created with an course of ${testStudent1.course}, but getData returned a course of ${result.course}`);
 		}
-		if(data.course === undefined){
-			throw( 'returned object from getData did not have the key "course"');
+		if(result.grade!=testStudent1.grade	){
+			throw new Error(`student was created with an grade of ${testStudent1.grade}, but getData returned a grade of ${result.grade}`);
 		}
-		if(data.course !== 'Math'){
-			throw( 'returned object from getData did not have correct value for the key "course", expected "Math" but got ' + data.course);
+		if(typeof result.grade!== 'number'	){
+			throw new Error('student was created with an grade of type number, but getData returned a grade of type ' + typeof result.grade);
 		}
-		if(data.grade === undefined){
-			throw( 'returned object from getData did not have the key "grade"');
+		if(result2.grade!=testStudent2.grade	){
+			throw new Error(`student was created with an grade of ${testStudent2.grade}, but getData returned a grade of ${result2.grade}`);
 		}
-		if(typeof data.grade !== 'number'){
-			throw( 'returned object from getData did not return the appropriate datatype.  expected number but got ' + typeof data.grade);
-		}
-		if(data.grade !== 100){
-			throw( 'returned object from getData did not have correct value for the key "grade", expected 100 but got ' + data.grade);
+		if(typeof result2.grade!== 'number'	){
+			throw new Error(`student was created with an grade of type string but should have been converted to a number.  getData returned a grade of type typeof ${result.grade}.  Either the number was stored in constructor wrong, or returned from getData wrong`);
 		}
 	} catch( error ){
-		displayMessage(['error with Student Record getData(): ',error],'error');
+		displayMessage(['error with Student getData(): ', error],'error');
 		return false;
 	}
 	displayMessage('getData method passed','message');
-
-	if(testMethod( student, 'update')) return
 	try{
-		var result = student.update('mooo',4);
-		if(result!==false){
-			throw('update method did not return false when given an illegal field name of "mooo", gave ' + result + ' instead');
-		}
 		var dom = student.render();
-		result = student.update('name','Jack');
-		data = 	student.getData();
-		if(result!==true){
-			throw('update method did not return true when given a valid value to change');
+		$("#displayArea").append(dom);
+		if($("#displayArea tr").length!==1){
+			throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
 		}
-		if(data.name !== 'Jack'){
-			throw('update method did not change the student name to "Jack", it is '+ data.name);
+		var selectedChildren = $("#displayArea tr td")
+		if(selectedChildren.length!==4){
+			throw( new Error('render returned tr should have had 4 tds in it.  It only had ' + selectedChildren.length));
 		}
-		if(dom.find('td')[0].innerHTML !== 'Jack'){
-			throw('update method did not update the name dom element of the student, the value in the dom element should have been "Jack" but was '+dom.find('td')[0].innerHTML);
+		if(selectedChildren.eq(0).text()!==testStudent1.name){
+			throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text()}`));
 		}
-
+		if(selectedChildren.eq(1).text()!==testStudent1.course){
+			throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text()}`));
+		}
+		if(selectedChildren.eq(2).text()!=testStudent1.grade){
+			throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text()}`));
+		}
+		var deleteButton = selectedChildren.eq(3).find('button');
+		if(deleteButton.length!==1){
+			throw( new Error(`render fourth td should have had a button inside of it, but didn't`));
+		}
+		if(deleteButton.text()!=='delete'){
+			throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+		}
 
 	} catch( error ){
-		displayMessage(['error with Student Record update(): ', error],'error');
+		displayMessage(['error with Student render(): ', error],'error');
+		return false;
+	}
+	try{
+		deleteButton.click();
+		if(testVal!==true){
+			throw( new Error(`delete button was called, but didn't properly execute callback function`));
+		}
+		if($("#displayArea > tr").length!==0){
+			throw( new Error(`Student's tr should be removed after delete called, but was not`))
+		}
+	} catch( error ){
+		displayMessage(['error with Student handleDelete(): ', error],'error');
 		return false;
 	}
 	displayMessage('update method passed','message');
@@ -141,156 +100,7 @@ function studentrecord_tests(){
 	return true;
 }
 
-function model_tests(){
-	displayMessage('--Model tests', 'header');
-	if(typeof Model === 'undefined' ){
-		displayMessage('Model object does not exist.  Check components/model.js and make sure the object is defined still and there are no syntax errors in the console');
-		return false;
-	}
-	var testModel = new Model();
-	if(testMethod( testModel, 'getNextID')) return
-	try{
-		var id = testModel.getNextID();
-		if(id !== 1){
-			throw( 'Exepected 1 as first ID from getNextID, got'+id);
-		}
-		id = testModel.getNextID();
-		if(id !== 2){
-			throw( 'Expected 2 as next ID from getNextID, got '+id);
-		}
-	} catch( error ){
-		displayMessage(['error with Model getNextID: ',error],'error');
-		return false;
-	}
-	displayMessage('constructor and getNextID methods passed','message');
 
-	if(testMethod( testModel, 'add')) return
-	try{
-		testModel = new Model(); //reset the model for testing;
-		var count = testModel.add('student1', 'course1', 50);
-		if(count !== 1){
-			throw( 'added a student, expected 1 as returned count, got'+count);
-		}
-		var count2 = testModel.add('student2', 'course2', 51);
-		if(count2 !== 2){
-			throw( 'added a student, expected 2 as returned count, got'+count);
-		}
-	} catch( error ){
-		displayMessage(['error with Model getNextID: ',error],'error');
-		return false;
-	}
-	displayMessage('add method passed','message');
-	if(testMethod( testModel, 'getAllStudents')) return
-	try{
-		
-		var studentList = testModel.getAllStudents();
-		if(!Array.isArray( studentList )){
-			throw('method should return an array, returned a ' + typeof studentList)
-		}
-		if(studentList.length!==2){
-			throw('There should be 2 items in the array, there were '+studentList.length);
-		}
-		if(studentList[0].constructor !== StudentRecord){
-			throw('method must return an array of StudentRecord, the contained pieces were made by a ' + studentList.constructor)
-		}
-		if(studentList[0].getData().name !== 'student1'){
-			throw('first student added did not have a name of "student1", had '+ studentList[0].getData().name);
-		}
-		if(studentList[1].getData().name !== 'student2'){
-			throw('second student added did not have a name of "student1", had '+ studentList[1].getData().name);
-		}
-		if(studentList[0].getData().course !== 'course1'){
-			throw('first student added did not have a course of "course1", had '+ studentList[0].getData().course);
-		}
-		if(studentList[1].getData().course !== 'course2'){
-			throw('second student added did not have a course of "course2", had '+ studentList[1].getData().course);
-		}
-		if(studentList[0].getData().grade !== 50){
-			throw('first student added did not have a grade of 50, had '+ studentList[0].getData().grade);
-		}
-		if(studentList[1].getData().grade !== 51){
-			throw('second student added did not have a grade of 51, had '+ studentList[1].getData().grade);
-		}
-	} catch( error ){
-		displayMessage(['error with getAllStudents : ',error],'error');
-		return false;
-	}
-	displayMessage('getAllStudents method passed','message');
-	//REMOVE
-	if(testMethod( testModel, 'remove')) return
-	try{
-		var studentListCopy = studentList.slice();
-		var result = testModel.remove(studentListCopy[0]);
-		if(result!==true){
-			throw('Should have returned true after successfully removing student, returned',result);
-		}
-		var newList = testModel.getAllStudents();
-		if(newList.length !== 1){
-			throw('There should be 1 student left, but count is '+ newList.length);
-		}
-		if(newList[0] !== studentListCopy[1]){
-			throw('Remaining item in model should be '+JSON.stringify(studentListCopy[1])+ ' but is '+JSON.stringify(newList[0]));
-		}
-		result = testModel.remove('haha');
-		if(result!==false){
-			throw('Tried to remove "haha" from student list, should have gotten false, but got '+result);
-		}
-		result = testModel.remove(studentListCopy[0]);
-		if(result!==false){
-			throw('Tried to remove a student that was already removed.  Should have gotten false, but got '+ result);
-		}
-	} catch( error ){
-		displayMessage(['error with remove : ',error],'error');
-		return false;
-	}
-	displayMessage('remove method passed','message');
-	if(testMethod( testModel, 'getStudentByField')) return
-	try{
-		var result = testModel.getStudentByField('name','student2');
-		if(result !== studentListCopy[1]){
-			throw('Tried to fetch student by name "student2", should have gotten '+JSON.stringify(studentListCopy[1])+', but got ' + result);
-		}
-		result = testModel.getStudentByField('grade',51);
-		if(result !== studentListCopy[1]){
-			throw('Tried to fetch student by grade 52, should have gotten '+JSON.stringify(studentListCopy[1])+', but got ' + result);
-		}
-		result = testModel.getStudentByField('splunge', 'student2');
-		if(result !== -1){
-			throw('Tried to find a student by a field that does not exist, expected -1, but got '+result);
-		}
-		result = testModel.getStudentByField('name','chuck');
-		if(result !== -1){
-			throw('Tried to find a student by a name called "chuck" that does not exist, should have gotten -1, but got '+result);
-		}
-	} catch( error ){
-		displayMessage(['error with getStudentByField : ',error],'error');
-		return false;
-	}
-	displayMessage('getStudentByField method passed','message');
-	if(testMethod( testModel, 'calculateGradeAverage')) return
-	try{
-		result = testModel.calculateGradeAverage();
-		if(result!==51){
-			throw('Tried to get average of 1 student with a grade of 51.  Expected average of 51.  Got '+ result);
-		}
-		testModel.add('student3', 'course3', 51);
-		result = testModel.calculateGradeAverage();
-		if(result!==51){
-			throw('Tried to get average of 2 students both with a grade of 51.  Expected average of 51.  Got '+ result);
-		}
-		testModel.add('student4', 'course4', 100);
-		result = testModel.calculateGradeAverage();
-		if(result!==(51+51+100)/3){
-			throw('Tried to get average of 51, 51, and 100.  Expected average of 67.33(repeating).  Got '+ result);
-		}		
-	} catch( error ){
-		displayMessage(['error with calculateGradeAverage : ',error],'error');
-		return false;
-	}
-	displayMessage('calculateGradeAverage method passed','message');
-	displayMessage('Model passed all tests','green');
-	return true;
-}
 
 function sgt_tests(){
 	displayMessage('--SGT tests', 'header');
@@ -327,7 +137,7 @@ function sgt_tests(){
 			}
 		}
 		if(i===eventData.click.length){
-			throw('Could not find handleAdd as a click handler on the add button');
+			throw( new Error('Could not find handleAdd as a click handler on the add button'));
 		}
 		eventData = $._data( $("#cancelButton")[0], "events" );
 		for(var i=0; i< eventData.click.length; i++){
@@ -336,150 +146,186 @@ function sgt_tests(){
 			}
 		}
 		if(i===eventData.click.length){
-			throw('Could not find handleAdd as a click handler on the add button');
+			throw( new Error('Could not find handleAdd as a click handler on the add button'));
 		}
 	} catch( error ){
 		displayMessage(['error with SGT addEventHandlers: ',error],'error');
 		return false;
 	}
 	displayMessage('addEventHandlers method passed','message');
-
 	if(testMethod( testSGT, 'clearInputs')) return
+	elementSelectors.nameInput.val('name');
+	elementSelectors.courseInput.val('course');
+	elementSelectors.gradeInput.val('grade');
 	try{
-		elementSelectors.nameInput.val('test');
-		elementSelectors.courseInput.val('test');
-		elementSelectors.gradeInput.val('test');
 		testSGT.clearInputs();
 		if(elementSelectors.nameInput.val()!==''){
-			throw('clearInputs didn\'t clear the name input');
+			throw new Error(`called clearInput: name input value should be '', but is ${elementSelectors.nameInput.val()}`)
 		}
 		if(elementSelectors.courseInput.val()!==''){
-			throw('clearInputs didn\'t clear the course input');
+			throw new Error(`called clearInput: course input value should be '', but is ${elementSelectors.courseInput.val()}`)
 		}
 		if(elementSelectors.gradeInput.val()!==''){
-			throw('clearInputs didn\'t clear the grade input');
+			throw new Error(`called clearInput: grade input value should be '', but is ${elementSelectors.gradeInput.val()}`)
 		}
-		displayMessage('clearInputs cleared all inputs','message');	
-	} catch( error ){
-		displayMessage(['error with SGT clearInputs: ',error],'error');
-		return false;
-	}
-	displayMessage('clearInputs method passed','message');
-
-	try{
-		elementSelectors.nameInput.val('test');
-
-		testSGT.handleCancel();
-		if(elementSelectors.nameInput.val()!==''){
-			throw('handleCancel didn\'t clear the name input');
-		}
-		if(elementSelectors.courseInput.val()!==''){
-			throw('handleCancel didn\'t clear the course input');
-		}
-		if(elementSelectors.gradeInput.val()!==''){
-			throw('handleCancel didn\'t clear the grade input');
-		}
-		displayMessage('handleCancel cleared all inputs','message');
-		elementSelectors.nameInput.val('test');
+		elementSelectors.nameInput.val('name');
+		elementSelectors.courseInput.val('course');
+		elementSelectors.gradeInput.val('grade');
 		elementSelectors.cancelButton.click();
-		if(elementSelectors.nameInput.val()!==''){
-			throw('cancel button click did not clear the inputs');
-		}		
+		if(elementSelectors.nameInput.val()!=='' || elementSelectors.courseInput.val()!=='' || elementSelectors.gradeInput.val()!==''){
+			throw new Error(`cancel button was pressed, but the name, course, and grade inputs were not cleared.  Cancel button should call clearInputs`)
+		}
 	} catch( error ){
-		displayMessage(['error with SGT handleCancel: ',error],'error');
+		displayMessage(['error with SGT clearInput: ',error],'error');
 		return false;
 	}
-	displayMessage('handleCancel method passed','message');
-	//HANDLE displayAverage
-	if(testMethod( testSGT, 'displayAverage')) return
+	displayMessage('SGT clearInputs passed','green');
+	if(testMethod( testSGT, 'createStudent')) return
 	try{
-		testSGT.displayAverage();
-		var text = elementSelectors.averageArea.text();
-		if(text !== '00'){ //there are 2 display areas
-			throw('expected to see 0 in both average display areas, got ' + text.substr(0,text.length/2))
+		var result = testSGT.createStudent('john','math',50,1);
+		if(Array.isArray(testSGT.data)){
+			throw new Error(`data property of SGT_template should be an object, but it was an array`);
 		}
-		testSGT.model.add('dude', 'hockey', 0);
-		testSGT.model.add('dudette', 'thermonuclear war', 100);
-		testSGT.displayAverage();
-		var text = elementSelectors.averageArea.text();
-		if(text !== '5050'){ //there are 2 display areas
-			throw('expected to see 50 in both average display areas, got ' + text.substr(0,text.length/2))
+		if(testSGT.data['1'] === undefined){
+			throw new Error(`SGT_template createStudent('john','math',50,1) was called.  Should have made a student with those values and added it to data.  Student not found in data at key 1 `)
 		}
+		if(!(testSGT.data['1'] instanceof Student)){
+			throw new Error(`SGT_template createStudent('john','math',50,1) was called. Should have added an object that is an instance of Student, but it was a ${testSGT.data['1'].constructor}`)
+		}
+		if(result!==true){
+			throw new Error(`SGT_template createStudent should have returned true for a successful add, but returned ${result}`);
+		}
+		result = testSGT.createStudent('john2','math2',50,1);
+		if(result!==false){
+			throw new Error(`SGT_template createStudent should have returned false for trying to add a student with the same ID as an existing student, but returned ${result}`);
+		}
+		var items = Object.values(testSGT.data);
+		if(items.length!==1){
+			throw new Error(`SGT_template data should have had 1 item in it after successfully adding 1 student and failing to add the same student again, but had ${items.length}`)
+		}
+		result = testSGT.createStudent('student3','math',50,3);
+		items = Object.values(testSGT.data);
+		if(items.length!==2){
+			throw new Error(`SGT_template was given another student (createStudent('student3','math',50,3)), should now have 2, but had ${items.length}`)
+		}
+		result = testSGT.createStudent('student4','math',50);
+		items = Object.values(testSGT.data);
+		if(items.length!==3){
+			throw new Error(`SGT_template was given another student, but with no id. (createStudent('student4','math',50)), should now have 3 items, but had ${items.length}`)
+		}
+		result = testSGT.createStudent('student5','math',50);
+		items = Object.values(testSGT.data);
+		if(items.length!==4){
+			throw new Error(`SGT_template was given another student, again with no id. (createStudent('student5','math',50)), should now have 4 items, but had ${items.length}`)
+		}
+		if(testSGT.data['4']===undefined){
+			throw new Error(`SGT_template was given another student with no id, but the next id slot was taken by a previous entry.  It should have added this student at the next available ID of 4, but did not`)
+		}
+		if(testSGT.data['4'].getData().name!=='student5'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a name of student5, but had ${testSGT.data['4'].getData().name}`)
+		}
+		if(testSGT.data['4'].getData().course!=='math'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a course of math, but had ${testSGT.data['4'].getData().course}`)
+		}
+		if(typeof testSGT.data['4'].getData().grade !== 'number'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of type ${typeof testSGT.data['4'].getData().grade}`)
+		}
+		if(testSGT.data['4'].getData().grade !== 50){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of number 50, but had ${testSGT.data['4'].getData().grade}`)
+		}
+		elementSelectors.nameInput.val('name');
+		elementSelectors.courseInput.val('course');
+		elementSelectors.gradeInput.val(100);
+		elementSelectors.addButton.click();
+		items = Object.values(testSGT.data);
+		var studentData = testSGT.data[5].getData();
+		console.log(studentData);
+		var dom = $("#displayArea > tr:nth-of-type(5)");
+		if(items.length!==5){
+			throw new Error(`SGT_template createStudent should have been triggered by button 'add' being clicked.  Either function wasn't triggered, or createStudent didn't get proper data from inputs`)
+		}
+		if(studentData.name!=='name'){
+			throw new Error(`Name input had 'name' in it when add was clicked, but created Student has a name of ${studentData.name}`)
+		}
+		if(studentData.course!=='course'){
+			throw new Error(`Course input had 'course' in it when add was clicked, but created Studenthas a course of ${studentData.course}`)
+		}
+		if(studentData.grade!==100){
+			throw new Error(`Grade input had 100 in it when add was clicked, but created Student has a grade of ${studentData.grade}`)
+		}
+
 	} catch( error ){
-		displayMessage(['error with SGT displayAverage: ',error],'error');
+		displayMessage(['error with SGT handleAdd: ',error],'error');
 		return false;
 	}
-	displayMessage('displayAverage method passed','message');
-	//HANDLE displayAllStudents
+	displayMessage('SGT createStudent passed','green');
 	if(testMethod( testSGT, 'displayAllStudents')) return
 	try{
-		testSGT.displayAllStudents();
-		var trs = elementSelectors.displayArea.find("tr");
-		if(trs.length!==2){
-			throw('Expected to see 2 student records displayed, got ' + trs.length);
+		elementSelectors.nameInput.val('name2');
+		elementSelectors.courseInput.val('course2');
+		elementSelectors.gradeInput.val(99);
+		elementSelectors.addButton.click();
+		items = Object.values(testSGT.data);
+		var dom = $("#displayArea > tr:nth-of-type(1)");
+		console.log(dom);
+		var result = dom.find('td:nth-of-type(1)').text()
+		if(result!=='john'){
+			throw new Error(`Name input had 'john' in it when add was clicked, but created Student dom element has a name of ${result}`)
 		}
-		var firstName = trs.eq(0).find('td:first-child').text()
-		if(firstName!=='dude'){
-			throw('Expected first student\'s display name to be "dude", found '+firstName)
+		var result = dom.find('td:nth-of-type(2)').text()
+		if(result!=='math'){
+			throw new Error(`Course input had 'math' in it when add was clicked, but created Student dom element has a course of ${result}`)
 		}
-		var secondName = trs.eq(1).find('td:first-child').text()
-		if(secondName!=='dudette'){
-			throw('Expected second student\'s display name to be "dudette", found '+firstName)
+		var result = dom.find('td:nth-of-type(3)').text()
+		if(result!=='50'){
+			throw new Error(`Grade input had 50 in it when add was clicked, but created Student dom element has a grade of ${result}`)
 		}
-		testSGT.displayAllStudents();
-		var trs2 = elementSelectors.displayArea.find("tr");
-		if(trs2.length!==2){
-			if(trs2.length === 4){
-				throw('Expected to see 2 student records displayed, got 4.  Did you forget to clear the display area?');
-			}
-			throw('Expected to see 2 student records displayed, got ' + trs2.length);
+		var dom = $("#displayArea > tr:nth-of-type(6)");
+		console.log(dom);
+		var result = dom.find('td:nth-of-type(1)').text()
+		if(result!=='name2'){
+			throw new Error(`Name input had 'name2' in it when add was clicked, but created Student dom element has a name of ${result}`)
 		}
-		var secondGrade = trs.eq(1).find('td:nth-child(3)').text()
-		if(secondGrade!=='100'){
-			throw('Expected second student\'s display grade to be 100, found '+secondGrade);
+		var result = dom.find('td:nth-of-type(2)').text()
+		if(result!=='course2'){
+			throw new Error(`Course input had 'course2' in it when add was clicked, but created Student dom element has a course of ${result}`)
+		}
+		var result = dom.find('td:nth-of-type(3)').text()
+		if(result!=='99'){
+			throw new Error(`Grade input had 99 in it when add was clicked, but created Student dom element has a grade of ${result}`)
+		}
+		var rows = $("#displayArea > tr")
+		$(rows[3]).remove();
+		if( rows.length !== 6){
+			throw new Error(`6 students have been added.  There should be 6 students present on the dom in TR elements, but found ${rows.length}`)
 		}
 	} catch( error ){
 		displayMessage(['error with SGT displayAllStudents: ',error],'error');
 		return false;
 	}
-	displayMessage('displayAllStudents method passed','message');
-	//HANDLE ADD
-	if(testMethod( testSGT, 'handleAdd')) return
+	displayMessage('SGT displayAllStudents passed','green');
+	if(testMethod( testSGT, 'displayAverage')) return
 	try{
-		elementSelectors.nameInput.val('testStudent1');
-		elementSelectors.courseInput.val('testCourse1');
-		elementSelectors.gradeInput.val(100);
-		var pre_students = testSGT.model.getAllStudents().slice();	
-		testSGT.handleAdd();
-		if(elementSelectors.nameInput.val()!==''){
-			throw('handleAdd did not invoke clearInputs or did not clear the inputs after add');
+		if(parseFloat(elementSelectors.averageArea.eq(0).text()) != 66.5){
+			throw new Error(`average area should have had a value of 66.5 after being stripped of extra zeros, but had an average of ${elementSelectors.averageArea.eq(0).text()}.  Did you calculate the average incorrectly?`)
 		}
-		var post_students = testSGT.model.getAllStudents();
-		elementSelectors.nameInput.val('testStudent2');
-		elementSelectors.courseInput.val('testCourse2');
-		elementSelectors.gradeInput.val(100);
-		var post_students = testSGT.model.getAllStudents();
-		elementSelectors.addButton.click();
-		if(post_students.length !== pre_students.length + 2){
-			throw('clicking on the add button did not save the data to a new student in the model');
+		if(elementSelectors.averageArea.eq(0).text() === '66.50'){
+			throw new Error(`average area should have had a value of 66.50, but had 66.5.  Make sure you used toFixed(2) on output to fix the precision of the output`)
 		}
-		var text = elementSelectors.averageArea.text();
-		if(text !== '7575'){ //there are 2 display areas
-			throw('expected to see 75 in both average display areas, got ' + text.substr(0,text.length/2))
-		}		
+
 	} catch( error ){
-		displayMessage(['error with SGT handleAdd: ',error],'error');
+		displayMessage(['error with SGT displayAverage: ',error],'error');
 		return false;
 	}
-	displayMessage('handleAdd method passed','message');
+	displayMessage('SGT displayAverage passed','green');
 
 	displayMessage('SGT passed all tests','green');
 	return true;
 }
 
 function startTests(){
-	intiateTestDisplay();
-	var testFunctions = ['studentrecord_tests', 'model_tests', 'sgt_tests'];
+	$(".errorMessage").remove();
+	var testFunctions = ['student_tests', 'sgt_tests'];
 	var i = 0;
 	while( i<testFunctions.length && window[testFunctions[i]]() === true){
 		i++;
@@ -496,19 +342,32 @@ function displayMessage(message, type='error'){
 	} else {
 		wholeMessage = modalMessage = message;
 	}
-	var element = $("<div>").text(modalMessage).addClass(type);
-	if(type==='error'){
-		console.error(wholeMessage);
+	
+
+
+	if(modalMessage instanceof Error){
+		// debugger;
+		// var stackOutput = {};
+		// Error.captureStackTrace(stackOutput, modalMessage);
+		// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
+		// var preppedMessage = `tests.js: line ${lineNumber} ${modalMessage}`;
+		console.error(modalMessage);
+		preppedMessage = modalMessage;
+		var advisor = $("<div>").text('CHECK CONSOLE FOR MORE INFO.').addClass('errorMessage')
 	} else {
+		preppedMessage = modalMessage;
 		console.log(wholeMessage);
+		advisor = '';
 	}
-	$("#errorArea").prepend(element);
+	var element = $("<div>").text(preppedMessage).addClass(type + ' errorMessage');
+	
+	$("#errorArea").prepend(element, advisor);
 }
 
 function testMethod( object, method ){
 	try{
 		if(object[method] === undefined){
-			throw 'missing method '+method+' in ' + object.constructor.name;
+			throw( new Error('missing method '+method+' in ' + object.constructor.name));
 		}
 	}
 	catch (error){
@@ -518,6 +377,7 @@ function testMethod( object, method ){
 }
 var shadow;
 var displayModal;
+var modalContents;
 var minimizeButton;
 function intiateTestDisplay(){
 	shadow = $("<div>",{
@@ -533,48 +393,47 @@ function intiateTestDisplay(){
 	shadow.hide();
 	displayModal = $("<div>",{
 		css: {
-			'background-color': 'white',
-			position: 'fixed',
-			bottom: 0,
-			left: '50%',
-			'height': '15%',
-			width: '50%',
-			'transform': 'translateX(-50%)',
-			border: '1px solid black',
-			overflow: 'scroll'
+
 		},
 		id:'errorArea',
+	})
+	modalContents = $("<div>",{
+		class: 'modalContainer'
+	})
+	modalContents.append(displayModal);
+
+	runTestButton = $("<div>",{
+		text: 'RUN',
+		'class': 'runTestButton',
+		on: {
+			click: startTests
+		}
 	})
 	minimizeButton = $("<div>",{
 		text: '^',
 		css: {
-			'background-color': 'grey',
-			padding: '5px',
-			cursor: 'pointer',
-			position: 'absolute',
-			color: 'white',
-			'font-size': '14px',
-			top: 0,
-			right: 0
 		},
+		'class': 'minimizeButton',
 		on: {
 			click: hideModal
 		}
 	})
-	displayModal.hide();
-	$('body').append(minimizeButton, displayModal);
+	modalContents.append(runTestButton);
+	//modalContainer.hide();
+	$('body').append( minimizeButton, modalContents );
+	showModal();
 }
 function showModal(){
-	minimizeButton.appendTo(displayModal);
-	displayModal.show();
+	minimizeButton.appendTo(modalContents);
+	modalContents.show();
 	minimizeButton.text('^').off('click', showModal).on('click', hideModal)
 	//shadow.show();
 }
 function hideModal(){
 	minimizeButton.appendTo('body');
 	minimizeButton.text('v').off('click', hideModal).on('click', showModal)
-	displayModal.hide();
-	shadow.hide();
+	modalContents.hide();
+	//shadow.hide();
 }
 
 

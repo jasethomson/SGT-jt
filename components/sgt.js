@@ -8,7 +8,8 @@ class SGT_template{
 	return: undefined
 	*/
 	constructor( elementConfig ){
-		this.model = new Model();
+		this.data = {};
+		this.studentCount = 0;
 		this.buttons = {
 			add: elementConfig.addButton,
 			cancel: elementConfig.cancelButton
@@ -24,6 +25,7 @@ class SGT_template{
 		}
 		this.handleAdd = this.handleAdd.bind( this );
 		this.handleCancel = this.handleCancel.bind( this );
+		this.deleteStudent = this.deleteStudent.bind(this);
 	}
 	/* addEventHandlers - add event handlers to premade dom elements
 	adds click handlers to add and cancel buttons using the dom elements passed into constructor
@@ -57,7 +59,7 @@ class SGT_template{
 	return: undefined
 	*/
 	handleAdd(){
-		this.model.add( this.inputs.name.val(), this.inputs.course.val(), this.inputs.grade.val() );
+		this.createStudent( this.inputs.name.val(), this.inputs.course.val(), this.inputs.grade.val() );
 		this.clearInputs();
 		this.displayAllStudents();
 	}
@@ -72,10 +74,11 @@ class SGT_template{
 	return: undefined
 	*/
 	displayAllStudents(){
-		var allStudents = this.model.getAllStudents();
 		var studentDoms = [];
+		var allStudents = this.readStudent();
 		for( var i=0; i< allStudents.length; i++){
-			studentDoms.push( allStudents[i].render() );
+			var currentStudent = allStudents[i];
+			studentDoms.push( currentStudent.render() );
 		}
 		this.displayAreas.students.empty().append( studentDoms );
 		this.displayAverage();
@@ -85,6 +88,61 @@ class SGT_template{
 	params: none
 	return: undefined */
 	displayAverage(){
-		this.displayAreas.average.text( this.model.calculateGradeAverage() );
+		var allStudents = this.readStudent();
+		var sum = 0;
+		if( allStudents.length === 0){
+			this.displayAreas.average.text(0);
+		}
+		for( var i=0; i<allStudents.length; i++){
+			sum+= allStudents[i].getData().grade;
+		}
+		var average = sum / allStudents.length;
+		this.displayAreas.average.text( average.toFixed(2) );
 	}
+	createStudent(name, course, grade, id){
+		if(this.data.hasOwnProperty(id)){
+			return false;
+		}
+		if(id===undefined){
+			id = this.studentCount+1;
+			while(this.data.hasOwnProperty(id)){
+				id++;
+			}
+		}
+		var student = new Student(id, name, course, grade+'moo', this.deleteStudent);
+		this.data[id] = student;
+		return true;
+	}
+	doesStudentExist(id){
+		if(id===undefined){
+			return false;
+		}		
+		if(this.data.hasOwnProperty(id)){
+			return true
+		}
+		return false;
+	}
+	readStudent(id){
+		if(id!==undefined && this.doesStudentExist(id)){
+			return this.data[id];
+		} else {
+			return Object.values(this.data);
+		}
+	}
+	updateStudent(id, field, value){
+		if(id!==undefined && this.doesStudentExist(id)){
+			this.data[id][field] = value;
+			return true;
+		}
+		return false;
+	}
+	deleteStudent(id){
+		if(id!==undefined && this.doesStudentExist(id)){
+			delete this.data[id];
+			return true;
+		}
+		return false;
+	}
+
+
 }
