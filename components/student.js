@@ -12,8 +12,10 @@ class Student{
 		(number) grade - the grade of the student
 		(function) deleteCallback - the removal function from the model to call when this student wants to be removed from the model's list
 	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
+	ESTIMATED TIME: 30 minutes to understand
 	*/
 	constructor(id, name, course, grade, deleteCallback=()=>{}){
+		//this method has been built out to help you understand the general structure better
 		this.data = {
 			id: id,
 			name: name,
@@ -43,18 +45,10 @@ class Student{
 		(string) field - the field in the object to change
 		(multiple) value - the value to change the field to
 	return: (boolean) true if it was changed, false if it was not
+	ESTIMATED TIME: 1.5 hours
 	*/
-	update( field, value ){
-		var allowedFields = ['id', 'name', 'course', 'grade'];
-		if( allowedFields.indexOf( field ) !== -1 ){
-			this.data[field] = value;
-			if( field !== 'id'){
-				this.domElements[field].text(value);
-			}
-			return true;
-		}
-		console.error('cannot modify '+ field);
-		return false;
+	update(  ){
+
 	}
 	/* getData - get all the student data as a simple object
 	params: none
@@ -63,9 +57,10 @@ class Student{
 		(string): name
 		(string): course
 		(number): grade
+	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		return this.data;
+		
 	}
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
 		name : the student's name
@@ -81,31 +76,18 @@ class Student{
 		return the TR
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
+	ESTIMATED TIME: 2 hours
 	*/
 	render(){
-		this.domElements.row = $("<tr>");
-		this.domElements.name = $("<td>").text( this.data.name );
-		this.domElements.course = $("<td>").text( this.data.course);
-		this.domElements.grade = $("<td>").text( this.data.grade );
-		this.domElements.operations = $("<td>");
-		this.deleteButton = $("<button>",{
-			text: 'delete',
-			'class': 'btn btn-lrg btn-danger',
-			on: {
-				click: this.handleDelete
-			}
-		});
-		this.domElements.operations.append( this.deleteButton );
-		this.domElements.row.append(this.domElements.name, this.domElements.course, this.domElements.grade , this.domElements.operations);
-		return this.domElements.row;
+		
 	}
 	/* handleDelete - call the model delete callback, and remove this student's dom element
 	purpose: 
 		call the callback that was passed into the constructor by the model - give it this object's reference
 		remove this object's dom element row to erase the entire dom element
+	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-		this.deleteCallback( this.getData().id );
-		this.domElements.row.remove();
+		
 	}
 }
