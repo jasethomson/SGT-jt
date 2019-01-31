@@ -88,17 +88,25 @@ class SGT_template{
 	params: none
 	return: undefined */
 	displayAverage(){
-		var allStudents = this.readStudent();
-		var sum = 0;
-		if( allStudents.length === 0){
-			this.displayAreas.average.text(0);
-		}
-		for( var i=0; i<allStudents.length; i++){
-			sum+= allStudents[i].getData().grade;
-		}
-		var average = sum / allStudents.length;
-		this.displayAreas.average.text( average.toFixed(2) );
+		this.displayAreas.average.text( this.model.calculateGradeAverage() );
 	}
+	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
+
+		name : the student's name
+		course : the student's course
+		grade: the student's grade
+		id: the id of the student
+	purpose: 
+			If no id is present, it must pick the next available id that can be used
+			when it creates the Student object, it must pass the id, name, course, grade, 
+			and a reference to SGT's deleteStudent method
+	params: 
+		name : the student's name
+		course : the student's course
+		grade: the student's grade
+		id: the id of the student
+	return: false if unsuccessful in adding student, true if successful
+	*/
 	createStudent(name, course, grade, id){
 		if(this.data.hasOwnProperty(id)){
 			return false;
@@ -113,24 +121,56 @@ class SGT_template{
 		this.data[id] = student;
 		return true;
 	}
+	/* doesStudentExist - 
+		deermines if a student exists by ID.  returns true if yes, false if no
+	purpose: 
+			check if passed in ID is a value, if it exists in this.data, and return the presence of the student
+	params: 
+		id: (number) the id of the student to search for
+	return: false if id is undefined or that student doesn't exist, true if the student does exist
+	*/
 	doesStudentExist(id){
 		if(id===undefined){
 			return false;
 		}		
 		if(this.data.hasOwnProperty(id)){
-			return true;
+			return true
 		}
 		return false;
 	}
+	/* readStudent - 
+		get the data for one or all students
+	purpose: 
+			determines if ID is given or not
+			if ID is given, return the student by that ID, if present
+			if ID is not given, return all students in an array
+	params: 
+		id: (number)(optional) the id of the student to search for, if any
+	return: 
+		a singular Student object if an ID was given, an array of Student objects if no ID was given
+	*/
 	readStudent(id){
 		if(id!==undefined && this.doesStudentExist(id)){
 			return this.data[id];
-		} else if (id===undefined){
-
-			return Object.values(this.data)
+		} else {
+			return Object.values(this.data);
 		}
-		return false;
 	}
+	/* updateStudent - 
+		not used for now.  Will be used later
+		pass in an ID, a field to change, and a value to change the field to
+	purpose: 
+		finds the necessary student by the given id
+		finds the given field in the student (name, course, grade)
+		changes the value of the student to the given value
+		for example updateStudent(2, 'name','joe') would change the name of student 2 to "joe"
+	params: 
+		id: (number) the id of the student to change in this.data
+		field: (string) the field to change in the student
+		value: (multi) the value to change the field to
+	return: 
+		true if it updatd, false if it did not
+	*/
 	updateStudent(id, field, value){
 		if(id!==undefined && this.doesStudentExist(id)){
 			this.data[id][field] = value;
@@ -138,6 +178,18 @@ class SGT_template{
 		}
 		return false;
 	}
+	/* deleteStudent - 
+		delete the given student at the given id
+	purpose: 
+			determine if the ID exists in this.data
+			remove it from the object
+			return true if successful, false if not
+			this is often called by the student's delete button through the Student handleDelete
+	params: 
+		id: (number) the id of the student to delete
+	return: 
+		true if it was successful, false if not
+	*/
 	deleteStudent(id){
 		if(id!==undefined && this.doesStudentExist(id)){
 			delete this.data[id];
