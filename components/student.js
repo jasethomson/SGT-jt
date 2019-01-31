@@ -105,7 +105,7 @@ class Student{
 		remove this object's dom element row to erase the entire dom element
 	*/
 	handleDelete(){
-		this.deleteCallback( this );
+		this.deleteCallback( this.getData().id );
 		this.domElements.row.remove();
 	}
 }

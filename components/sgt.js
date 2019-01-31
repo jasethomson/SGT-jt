@@ -109,7 +109,7 @@ class SGT_template{
 				id++;
 			}
 		}
-		var student = new Student(id, name, course, grade+'moo', this.deleteStudent);
+		var student = new Student(id, name, course, grade, this.deleteStudent);
 		this.data[id] = student;
 		return true;
 	}
@@ -118,16 +118,18 @@ class SGT_template{
 			return false;
 		}		
 		if(this.data.hasOwnProperty(id)){
-			return true
+			return true;
 		}
 		return false;
 	}
 	readStudent(id){
 		if(id!==undefined && this.doesStudentExist(id)){
 			return this.data[id];
-		} else {
-			return Object.values(this.data);
+		} else if (id===undefined){
+
+			return Object.values(this.data)
 		}
+		return false;
 	}
 	updateStudent(id, field, value){
 		if(id!==undefined && this.doesStudentExist(id)){

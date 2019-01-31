@@ -9,8 +9,8 @@ function student_tests(){
 		if(input === undefined){
 			throw new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned undefined');
 		}
-		if(input.constructor !== Student){
-			throw( new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned ' + JSON.stringify( input )));
+		if(typeof input !== 'number'){
+			throw( new Error('click callback for delete button did not provide an argument of the Student id (a number) that was clicked.  returned ' + JSON.stringify( input )));
 		}
 		testVal = true;
 	}
@@ -259,6 +259,63 @@ function sgt_tests(){
 		return false;
 	}
 	displayMessage('SGT createStudent passed','green');
+
+
+
+	if(testMethod( testSGT, 'doesStudentExist')) return
+	try{
+		if(testSGT.doesStudentExist(3)!==true){
+			throw new Error(`Student id 3 should exist, but doesStudentExist returned false`);
+		}
+		if(testSGT.doesStudentExist(40)!==false){
+			throw new Error(`Student id 40 was checked.  Should not exist, but doesStudentExist returned`);
+		}
+		//still need to test if there is 0 students... guess I could test that when I delete all students
+
+	} catch( error ){
+		displayMessage(['error with SGT doesStudentExist: ',error],'error');
+		return false;
+	}
+	displayMessage('SGT doesStudentExist passed','green');
+
+	if(testMethod( testSGT, 'readStudent')) return
+	try{
+		var pulledStudent = testSGT.readStudent(3);
+		if(pulledStudent.constructor!==Student){
+			throw new Error(`readStudent(3) should have returned a Student object, but returned a ${pulledStudent.constructor}`);
+		}
+		if(pulledStudent.getData().name!=='student3'){
+			throw new Error(`readStudent(3) should have returned a student with a name of student3, but had ${pulledStudent.getData().name}`);
+		}
+		if(pulledStudent.getData().course!=='math'){
+			throw new Error(`readStudent(3) should have returned a student with a course of math, but had ${pulledStudent.getData().course}`);
+		}
+		if(pulledStudent.getData().grade!==50){
+			throw new Error(`readStudent(3) should have returned a student with a grade of 50, but had ${pulledStudent.getData().grade}`);
+		}
+		if(pulledStudent.getData().id!=3){
+			throw new Error(`readStudent(3) should have returned a student with a id of 3, but had ${pulledStudent.getData().id}`);
+		}
+		if(testSGT.readStudent(40)!==false){
+			throw new Error(`readStudent(40) should have returned false, as no student by that id exists.  It returned ${testSGT.readStudent(40)}`)
+		}
+		var allStudents = testSGT.readStudent();
+		if(!Array.isArray(allStudents)){
+			throw new Error(`readStudent() (with no id given) should have returned an array of students.  It returned ${JSON.stringify(allStudents, null, 2)}`)
+		}
+		if(allStudents.length!==5){
+			throw new Error(`readStudent() (with no id given) should have returned an array of 5 elements (as there are 5 students added) it had ${allStudents.length} elements`)
+		}
+		if(allStudents[0].constructor !== Student){
+			throw new Error(`readStudent() (with no id given) should have returned an array of 5 students (Student objects), but they were ${allStudents[0].constructor} constructed`)
+		}
+
+	} catch( error ){
+		displayMessage(['error with SGT readStudent: ',error],'error');
+		return false;
+	}
+	displayMessage('SGT readStudent passed','green');
+
 	if(testMethod( testSGT, 'displayAllStudents')) return
 	try{
 		elementSelectors.nameInput.val('name2');
@@ -304,21 +361,64 @@ function sgt_tests(){
 		return false;
 	}
 	displayMessage('SGT displayAllStudents passed','green');
+
 	if(testMethod( testSGT, 'displayAverage')) return
 	try{
 		if(parseFloat(elementSelectors.averageArea.eq(0).text()) != 66.5){
 			throw new Error(`average area should have had a value of 66.5 after being stripped of extra zeros, but had an average of ${elementSelectors.averageArea.eq(0).text()}.  Did you calculate the average incorrectly?`)
 		}
-		if(elementSelectors.averageArea.eq(0).text() === '66.50'){
+		if(elementSelectors.averageArea.eq(0).text() !== '66.50'){
 			throw new Error(`average area should have had a value of 66.50, but had 66.5.  Make sure you used toFixed(2) on output to fix the precision of the output`)
 		}
-
 	} catch( error ){
 		displayMessage(['error with SGT displayAverage: ',error],'error');
 		return false;
 	}
 	displayMessage('SGT displayAverage passed','green');
 
+	if(testMethod( testSGT, 'deleteStudent')) return
+	try{
+		var result = testSGT.deleteStudent(100);
+		if(result!== false){
+			throw new Error(`deleteStudent(100) should have returned false because there is no student by ID 100.  It returned ${result}`)
+		}
+		testSGT.createStudent('delete name','delete class',100,40,function(){});
+		var allStudents = testSGT.readStudent();
+		result = testSGT.deleteStudent(40);
+		if(result!==true){
+			throw new Error(`A new student with ID 40 was added.  deleteStudent(40) was called.  It should have returned true after deleting the student successfully.  It returned ${result}`)
+		}
+		var afterAllStudents = testSGT.readStudent();
+		if(allStudents.length === afterAllStudents.length){
+			throw new Error(`after deleteStudent(40) ran, students should only have ${allStudents.length-1}, but it had ${afterAllStudents.length}`)
+		}
+
+	} catch( error ){
+		displayMessage(['error with SGT deleteStudent: ',error],'error');
+		return false;
+	}
+
+	try{
+		var beforeAllStudents = testSGT.readStudent();
+		$buttons = $("#displayArea tr button");
+		$($buttons[3]).click();
+		var afterAllStudents = testSGT.readStudent();
+		if($("#displayArea tr").length===5){
+			throw new Error(`delete button on fourth student ("name") was clicked, but a row wasn't deleted`);
+		}
+		if(beforeAllStudents.length === afterAllStudents.length+1){
+			throw new Error(`delete button on fourth student ("name") was clicked, but there are still ${beforeAllStudents.length} students in the SGT `);
+		}
+		if($("#displayArea tr td").eq(0).text()==='student3'){
+			throw new Error(`delete button on fourth student ("name") was clicked, but still reading that a student with name 'student3' is in the dom`);			
+		}
+
+	} catch( error ){
+		displayMessage(['error with SGT deleting: ',error],'error');
+		return false;
+	}
+	displayMessage('SGT deleteStudent passed','green');
+	displayMessage('SGT object passed','green');
 	displayMessage('SGT passed all tests','green');
 	return true;
 }
