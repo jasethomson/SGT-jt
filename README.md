@@ -24,7 +24,7 @@ Version 1 is the starting point.  The HTML/CSS has already been made.  You will 
 - makes a td to hold the name
     - creates a TD
     - puts the student's name in the td
-    - saves the TD to the object's domElements propery
+    - saves the TD to the object's domElements property
 - makes a td to hold the course
     - creates a TD
     - puts the student's course into the td
