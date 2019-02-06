@@ -2,7 +2,7 @@ function student_tests(){
 	displayMessage('--Student Records Test', 'header');
 	if(typeof Student === 'undefined' ){
 		displayMessage('Student object does not exist.  Check components/student.js and make sure the object is defined still and there are no syntax errors in the console');
-		return false;
+		return;
 	}
 	var testVal = false;
 	function testCallback(input){
@@ -16,10 +16,13 @@ function student_tests(){
 	}
 	var testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100};
 	var testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50'};
+	var testStudent3 = { id: 2, name: 'name3', course: 'course3', grade: '60'};
 	var student = new Student(testStudent1.id,testStudent1.name,testStudent1.course,testStudent1.grade,testCallback);
 	var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
+	var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
 
-	if(testMethod( student, 'getData')) return
+	if(testMethod( student, 'getData')) return;
+	
 	try{
 		var result = student.getData();
 		var result2 = student2.getData();
@@ -49,7 +52,7 @@ function student_tests(){
 		}
 	} catch( error ){
 		displayMessage(['error with Student getData(): ', error],'error');
-		return false;
+		return;
 	}
 	displayMessage('getData method passed','message');
 	try{
@@ -81,7 +84,7 @@ function student_tests(){
 
 	} catch( error ){
 		displayMessage(['error with Student render(): ', error],'error');
-		return false;
+		return;
 	}
 	try{
 		deleteButton.click();
@@ -93,7 +96,60 @@ function student_tests(){
 		}
 	} catch( error ){
 		displayMessage(['error with Student handleDelete(): ', error],'error');
-		return false;
+		return;
+	}
+
+	try{
+		var dom = student3.render();
+		$("#displayArea").append(dom);
+		if($("#displayArea tr").length!==1){
+			throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
+		}
+		testStudent3.name = "name4";
+		testStudent3.course = "course4";
+		testStudent3.grade = "75";
+		student3.update("name", testStudent3.name);
+		student3.update("course", testStudent3.course);
+		student3.update("grade", testStudent3.grade);
+
+		var result = student3.getData();
+		if(result.name!==testStudent3.name){
+			throw( new Error(`update should have updated the data property with the student name to ${testStudent3.name}, but getData returned ${result.name}`));
+		}
+		if(result.course!==testStudent3.course){
+			throw( new Error(`update should have updated the data property with the student course to ${testStudent3.course}, but getData returned ${result.course}`));
+		}
+		if(typeof result.grade!== 'number'	){
+			throw new Error('update of the student grade should have changed to type number, but getData returned a grade of type ' + typeof result.grade);
+		}
+		if(result.grade!=testStudent3.grade){
+			throw( new Error(`update should have updated the data property with the student grade to ${testStudent3.grade}, but getData returned ${result.grade}`));
+		}
+		var selectedChildren = $("#displayArea tr td");
+		if(selectedChildren.length!==4){
+			throw( new Error('update should not remove the tr that has 4 tds in it.  It only had ' + selectedChildren.length));
+		}
+		if(selectedChildren.eq(0).text()!==testStudent3.name){
+			throw( new Error(`update first td should now have had the student name of ${testStudent3.name}, but it had ${selectedChildren.eq(0).text()}`));
+		}
+		if(selectedChildren.eq(1).text()!==testStudent3.course){
+			throw( new Error(`update second td should now have had the student course of ${testStudent3.course}, but it had ${selectedChildren.eq(1).text()}`));
+		}
+		if(selectedChildren.eq(2).text()!=testStudent3.grade){
+			throw( new Error(`update third td should now have had the student grade of ${testStudent3.grade}, but it had ${selectedChildren.eq(2).text()}`));
+		}
+		var deleteButton = selectedChildren.eq(3).find('button');
+		if(deleteButton.length!==1){
+			throw( new Error(`update fourth td should have had a button inside of it, but didn't`));
+		}
+		if(deleteButton.text()!=='delete'){
+			throw( new Error(`update fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+		}
+		deleteButton.click();
+
+	} catch( error ){
+		displayMessage(['error with Student update(): ', error],'error');
+		return;
 	}
 	displayMessage('update method passed','message');
 	displayMessage('StudentRecord passed all tests','green');
@@ -427,7 +483,9 @@ function startTests(){
 	$(".errorMessage").remove();
 	var testFunctions = ['student_tests', 'sgt_tests'];
 	var i = 0;
-	while( i<testFunctions.length && window[testFunctions[i]]() === true){
+	while( i<testFunctions.length){
+		if (!window[testFunctions[i]]())
+			return;
 		i++;
 	}
 	displayMessage(' All tests passed! ', 'header');	

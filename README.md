@@ -14,7 +14,7 @@ Version 1 is the starting point.  The HTML/CSS has already been made.  You will 
 ### Version .2 - getData (30 minutes) - return the data stored in the object's data object
 - takes in no parameters
 - reads the object's data property
-- returns an object of the data in the object's data object
+- returns the object's data property
 ### Version .21 - render (2 hours) - create the dom elements for the student 
 - takes in no parameters
 - reads the object's data property
@@ -46,14 +46,14 @@ Version 1 is the starting point.  The HTML/CSS has already been made.  You will 
 ### Version .22 - handleDelete (15 minutes) - handle the click of the delete button
 - takes in no parameters
 - calls the deleteCallback property stored in this object
-    - passes back the ID of the deleteCallback
-- makes a row to hold the object's visual data. 
+    - passes in the ID property of the data object to the deleteCallback
+- removes the row from the DOM
 
 ### Version .23 - update (1.5 hours) - update the stored data AND the dom elements
-- takes in field and value.  field is the name, course, or grade as a string, then value is the value to change
+- takes in field and value.  field is the name, course, or grade as a string, then value is the new value
 - calls the deleteCallback property stored in this object
-    - passes back the ID of the deleteCallback
-- makes a row to hold the object's visual data.
+    - passes in the ID property of the data object to the deleteCallback
+- updates the row of the field with the new text.
 
 # SGT_Template
 - start with version.23 branch
