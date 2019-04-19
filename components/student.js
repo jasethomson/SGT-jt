@@ -3,14 +3,14 @@
 class Student{
 	/* constructor - take in params for the student and save them,
 		create storage for student dom elements
-		store the deletion callback from the model
+		store the deletion callback from the SGT_template class
 		bind event handlers
 	params: 
 		(number) id - the id of this student
 		(string) name - the name of the student
 		(string) course - the course of the student
 		(number) grade - the grade of the student
-		(function) deleteCallback - the removal function from the model to call when this student wants to be removed from the model's list
+		(function) deleteCallback - the removal function from the SGT_template to call when this student wants to be removed from the SGT_templates's list
 	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
 	ESTIMATED TIME: 30 minutes to understand
 	*/
@@ -33,23 +33,7 @@ class Student{
 		}
 		this.handleDelete = this.handleDelete.bind( this );
 	}
-	/* update - change a value in the student record
-	purpose: ensure that the field is one that can be changed (either id, name, course, or grade)
-		if not changable, return false
-		otherwise update the value 
-			save the value into the properties stored in the constructor
-			go to the dom element of the appropriate field and change the text
-				(for example, if name was changed, go to the student's name TD and change the name as well)
-			and return true
-	params: 
-		(string) field - the field in the object to change
-		(multiple) value - the value to change the field to
-	return: (boolean) true if it was changed, false if it was not
-	ESTIMATED TIME: 1.5 hours
-	*/
-	update(  ){
 
-	}
 	/* getData - get all the student data as a simple object
 	params: none
 	return: (object) an object with the following data
@@ -60,8 +44,9 @@ class Student{
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		
+		return this.data;
 	}
+	
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
 		name : the student's name
 		course : the student's course
@@ -79,15 +64,61 @@ class Student{
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
-		
+		var row = $("<tr>");
+		var name = $("<td>").text(this.data.name);
+		var course = $("<td>").text(this.data.course);
+		var grade = $("<td>").text(this.data.grade);
+		var operations = $("<td>");
+		var deleteButton = $("<button>").text('delete').on('click', this.handleDelete);
+
+		operations.append(deleteButton);
+		row.append(name, course, grade, operations);
+
+		this.domElements.row = row;
+		this.domElements.name = name;
+		this.domElements.course = course;
+		this.domElements.grade = grade;
+		this.domElements.operations = operations;
+		this.domElements.deleteButton = deleteButton;
+
+		return row;
 	}
-	/* handleDelete - call the model delete callback, and remove this student's dom element
+
+	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
 	purpose: 
-		call the callback that was passed into the constructor by the model - give it this object's reference
+		call the callback that was passed into the constructor - give it this object's reference
 		remove this object's dom element row to erase the entire dom element
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-		
+		this.deleteCallback(this.data.id);
+		this.domElements.row.remove();
+	}
+
+	/* update - change a value in the student record
+	purpose: ensure that the field is one that can be changed (either id, name, course, or grade)
+		if not changable, return false
+		otherwise update the value 
+			save the value into the properties stored in the constructor
+			go to the dom element of the appropriate field and change the text
+				(for example, if name was changed, go to the student's name TD and change the name as well)
+			and return true
+	params: 
+		(string) field - the field in the object to change
+		(multiple) value - the value to change the field to
+	return: (boolean) true if it was changed, false if it was not
+	ESTIMATED TIME: 1.5 hours
+	*/
+	update( field, value ){
+		if (this.data[field]) {
+
+			if (field === 'grade') {
+				value = parseInt(value);
+			}
+			this.data[field] = value;
+			this.domElements[field].text(value);
+			return true;
+		}
+		return false;
 	}
 }

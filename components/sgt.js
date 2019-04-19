@@ -2,14 +2,15 @@
 
 
 class SGT_template{
-	/* constructor - sets up sgt object 
+	/* constructor - sets up SGT object and storage of students
 	params: (object) elementConfig - all pre-made dom elements used by the app
-	purpose: instantiates a model and stores it in the object
+	purpose: stores the appropriate DOM elements inside of an object 
+		and uses those reference for later portions of the application
 	return: undefined
-	ESTIMATED TIME: 1 hour
 	*/
-	constructor(  ){
-
+	constructor( elementConfig ){
+		this.data = {};
+		this.domElements = elementConfig;
 	}
 	/* addEventHandlers - add event handlers to premade dom elements
 	adds click handlers to add and cancel buttons using the dom elements passed into constructor
@@ -19,57 +20,30 @@ class SGT_template{
 	*/
 
 	addEventHandlers(){
-
+		this.domElements.addButton.on('click', this.handleAdd.bind(this));
+		this.domElements.cancelButton.on('click', this.handleCancel.bind(this));
 	}
+
 	/* clearInputs - take the three inputs and clear their values
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
 	clearInputs(){
-
+		this.domElements.nameInput.val('');
+		this.domElements.courseInput.val('');
+		this.domElements.gradeInput.val('');
 	}
+
 	/* handleCancel - function to handle the cancel button press
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleCancel(){
-
+		this.clearInputs();
 	}
-	/* handleAdd - function to handle the add button click
-	purpose: grabs values from inputs, utilizes the model's add method to save them, then clears the inputs and displays all students
-	params: none
-	return: undefined
-	ESTIMATED TIME: 1 hour
-	*/
-	handleAdd(){
 
-	}
-	/* displayAllStudents - iterate through all students in the model
-	purpose: 
-		grab all students from model, 
-		iterate through the retrieved list, 
-		then render every student's dom element
-		then append every student to the dom's display area
-		then display the grade average
-	params: none
-	return: undefined
-	ESTIMATED TIME: 1.5 hours
-	*/
-	displayAllStudents(){
-
-	}
-	/* displayAverage - get the grade average and display it
-	purpose: grab the average grade from the model, and show it on the dom
-	params: none
-	return: undefined 
-	ESTIMATED TIME: 15 minutes
-
-	*/
-
-	displayAverage(){
-	}
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
 
 		name : the student's name
@@ -88,9 +62,22 @@ class SGT_template{
 	return: false if unsuccessful in adding student, true if successful
 	ESTIMATED TIME: 1.5 hours
 	*/
-	createStudent(){
+	createStudent(name, course, grade, id){
+		if (this.doesStudentExist(id)) {
+			return false;
+		}
 
+		if(!id) {
+			for (let studentID in this.data) {
+				id = studentID;
+			}
+			id = parseInt(id) + 1;
+		}
+	
+		this.data[id] = new Student(id, name, course, grade, this.deleteStudent);
+		return true;
 	}
+
 	/* doesStudentExist - 
 		deermines if a student exists by ID.  returns true if yes, false if no
 	purpose: 
@@ -100,9 +87,28 @@ class SGT_template{
 	return: false if id is undefined or that student doesn't exist, true if the student does exist
 	ESTIMATED TIME: 15 minutes
 	*/
-	doesStudentExist(){
-
+	doesStudentExist(id){
+		if(this.data[id]) {
+			return true;
+		}
+		return false;
 	}
+
+	/* handleAdd - function to handle the add button click
+	purpose: grabs values from inputs, utilizes the createStudent method to save them, then clears the inputs and displays all students
+	params: none
+	return: undefined
+	ESTIMATED TIME: 1 hour
+	*/
+	handleAdd(){
+		var name = this.domElements.nameInput.val();
+		var course = this.domElements.courseInput.val();
+		var grade = this.domElements.gradeInput.val();
+		this.createStudent(name, course, grade);
+		this.clearInputs();
+		this.displayAllStudents();
+	}
+
 	/* readStudent - 
 		get the data for one or all students
 	purpose: 
@@ -115,9 +121,76 @@ class SGT_template{
 		a singular Student object if an ID was given, an array of Student objects if no ID was given
 		ESTIMATED TIME: 45 minutes
 	*/
-	readStudent(){
-
+	readStudent(id){
+		if(id) {
+			if(!this.data[id]) {
+				return false;
+			}
+			return this.data[id];
+		}
+		return Object.values(this.data);
 	}
+
+	/* displayAllStudents - iterate through all students in the this.data object
+	purpose: 
+		grab all students from this.data, 
+		empty out every student in the dom's display area,
+		iterate through the retrieved list, 
+		then render every student's dom element
+		then append every student to the dom's display area
+		then display the grade average
+	params: none
+	return: undefined
+	ESTIMATED TIME: 1.5 hours
+	*/
+	displayAllStudents(){
+		this.domElements.displayArea.empty();
+		for (var student in this.data) {
+			this.domElements.displayArea.append(this.data[student].render());
+		}
+		this.displayAverage();
+	}
+
+	/* displayAverage - get the grade average and display it
+	purpose: grab the average grade from students in this.data, and shows it on the dom
+	params: none
+	return: undefined 
+	ESTIMATED TIME: 15 minutes
+	*/
+
+	displayAverage(){
+		var total = null;
+		var count = 0;
+		for (var student in this.data) {
+			var studentData = this.data[student].getData();
+			total += studentData.grade;
+			count++;
+		}
+		var average = (total / count).toFixed(2);
+		this.domElements.averageArea.text(average);
+	}
+
+	/* deleteStudent - 
+		delete the given student at the given id
+	purpose: 
+			determine if the ID exists in this.data
+			remove it from the object
+			return true if successful, false if not
+			this is often called by the student's delete button through the Student handleDelete
+	params: 
+		id: (number) the id of the student to delete
+	return: 
+		true if it was successful, false if not
+		ESTIMATED TIME: 30 minutes
+	*/
+	deleteStudent(id){
+		if(this.data[id]) {
+			delete this.data[id];
+			return true;
+		}
+		return false;
+	}
+
 	/* updateStudent - 
 		not used for now.  Will be used later
 		pass in an ID, a field to change, and a value to change the field to
@@ -136,22 +209,6 @@ class SGT_template{
 	*/
 	updateStudent(){
 
-	}
-	/* deleteStudent - 
-		delete the given student at the given id
-	purpose: 
-			determine if the ID exists in this.data
-			remove it from the object
-			return true if successful, false if not
-			this is often called by the student's delete button through the Student handleDelete
-	params: 
-		id: (number) the id of the student to delete
-	return: 
-		true if it was successful, false if not
-		ESTIMATED TIME: 30 minutes
-	*/
-	deleteStudent(){
-	
 	}
 
 
