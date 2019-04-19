@@ -64,24 +64,7 @@ class Student{
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
-		var row = $("<tr>");
-		var name = $("<td>").text(this.data.name);
-		var course = $("<td>").text(this.data.course);
-		var grade = $("<td>").text(this.data.grade);
-		var operations = $("<td>");
-		var deleteButton = $("<button>").text('delete').on('click', this.handleDelete);
 
-		operations.append(deleteButton);
-		row.append(name, course, grade, operations);
-
-		this.domElements.row = row;
-		this.domElements.name = name;
-		this.domElements.course = course;
-		this.domElements.grade = grade;
-		this.domElements.operations = operations;
-		this.domElements.deleteButton = deleteButton;
-
-		return row;
 	}
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
@@ -91,8 +74,7 @@ class Student{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-		this.deleteCallback(this.data.id);
-		this.domElements.row.remove();
+
 	}
 
 	/* update - change a value in the student record
@@ -110,15 +92,6 @@ class Student{
 	ESTIMATED TIME: 1.5 hours
 	*/
 	update( field, value ){
-		if (this.data[field]) {
 
-			if (field === 'grade') {
-				value = parseInt(value);
-			}
-			this.data[field] = value;
-			this.domElements[field].text(value);
-			return true;
-		}
-		return false;
 	}
 }
