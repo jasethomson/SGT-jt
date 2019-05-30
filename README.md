@@ -6,8 +6,9 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 - It has template files for the JS
 - It has an auto-tester that will give you feedback on your code
 
-#### v0.1 - 0.9 -  *Student class* - [Instructions](https://yo.com)
+#### v0.1 - 0.9 -  *Student class* - [Instructions](guides/features/student-class.md)
 #### v1.0 - 1.9 - *SGT_template class* - [Instructions](https://yo.com)
+#### v1.99 - *Pull JSON Data* - [Instructions]()
 #### v2.0 - 2.29 - *Read all students* - [Instructions](https://yo.com)
 #### v2.3 - 2.59 - *Create a new student* - [Instructions](https://yo.com)
 #### v2.6 - 2.99 - *Delete a student by ID* - [Instructions](https://yo.com)
@@ -51,4 +52,3 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 >
 > #### Data available appearance
 ><img src="https://cloud.githubusercontent.com/assets/10343746/9148437/22e2566e-3d30-11e5-9401-ba2cb8309d65.png" width="500"/>
-
