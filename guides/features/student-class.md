@@ -47,9 +47,9 @@ In this feature, You will be constructing the student object and all of its func
   - You will want to **add**, **commit**, and **push** the code that you have written to the appropriate Github repository.
     1. `git add .`
     2. `git commit -m "Description of the feature that you have implemented"`
-       - e.g. `git commit -m "added base calculation functionality"`
+       - e.g. `git commit -m "completed initial build of student object"`
     3. `git push origin FEATURE_NAME_HERE`
-       - e.g. `git push origin basic-calculation`
+       - e.g. `git push origin student-object`
 
 - Finally, you will want to create a pull request. This will merge the code from your newly **completed** feature branch into your `master` branch.
 
