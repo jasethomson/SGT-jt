@@ -58,7 +58,7 @@ class Student{
 		put the 4 TDs inside the TR.
 		Add the button to the operation TD
 		add the StudentRecord's handleDelete method to the delete button's click handler
-		store all these values for eventual change //TODO clarify point of storage
+		store all these values for any needed changes later
 		return the TR
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
