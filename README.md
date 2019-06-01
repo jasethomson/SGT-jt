@@ -6,15 +6,15 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 - It has template files for the JS
 - It has an auto-tester that will give you feedback on your code
 
-#### v0.1 - 0.9 -  *Student class* - [Instructions](guides/features/student-class.md)
-#### v1.0 - 1.9 - *SGT_template class* - [Instructions](https://yo.com)
-#### v1.99 - *Pull JSON Data* - [Instructions]()
-#### v2.0 - 2.29 - *Read all students* - [Instructions](https://yo.com)
-#### v2.3 - 2.59 - *Create a new student* - [Instructions](https://yo.com)
-#### v2.6 - 2.99 - *Delete a student by ID* - [Instructions](https://yo.com)
-#### v3.0 (Extra) - *Autocomplete courses and Updating a student* - [Instructions](https://yo.com)
-#### v4.0 (Extra) - *SGT Backend* - [Instructions](https://yo.com)
-#### v5.0 (Extra) - *SGT React* - [Instructions](https://yo.com)
+#### Feature Set #1 The *Student class* - [Instructions](guides/features/student-class.md)
+#### Feature Set #2 The *SGT_template class* - [Instructions](https://yo.com)
+#### Feature Set #3 *Pull JSON Data* - [Instructions]()
+#### Feature Set #4 *Read all students* - [Instructions](https://yo.com)
+#### Feature Set #5 *Create a new student* - [Instructions](https://yo.com)
+#### Feature Set #6 *Delete a student by ID* - [Instructions](https://yo.com)
+#### Feature Set #7 *Autocomplete courses and Updating a student* - [Instructions](https://yo.com)
+#### "Portfolio Requirement" *SGT Backend* - [Instructions](https://yo.com)
+####  "Optional React Conversion" *SGT React* - [Instructions](https://yo.com)
 
 ## Getting Started
 > - Are you on your master branch?
