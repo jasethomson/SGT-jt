@@ -8,9 +8,19 @@ In this feature, you will complete the functionality of the SGT template.
 <details>
 <summary>1. Where to Begin </summary>
 
-  - Declare a new function `calculate`.
-
-
+  - As in the previous Feature Set:
+    - Make sure to familiarize yourself with:
+      - What paramaters the constructor receives, if any.
+      - What methods the object will have when the build out is complete
+      - What data, if any, the methods will recieve
+      - What the methods will return
+    - Once you have familiarized yourself with the code
+      - Begin working in the constructor
+       - Construct it according to the documentation
+        - Note the errors returned by the tests
+          - As before, they will let you know what needs to be done
+        - Be aware that you might have to update the code in your `student.js` file
+    - When you have completed all of the tests, congratulations!!! you are ready to move on to the next feature set!
 
 </details>
 
@@ -20,7 +30,6 @@ In this feature, you will complete the functionality of the SGT template.
 
 
 
-### Design Docs
 
 
 
@@ -31,9 +40,9 @@ In this feature, you will complete the functionality of the SGT template.
   - You will want to **add**, **commit**, and **push** the code that you have written to the appropriate Github repository.
     1. `git add .`
     2. `git commit -m "Description of the feature that you have implemented"`
-       - e.g. `git commit -m "added base calculation functionality"`
+       - e.g. `git commit -m "completed initial build of SGT object"`
     3. `git push origin FEATURE_NAME_HERE`
-       - e.g. `git push origin basic-calculation`
+       - e.g. `git push origin sgt-object`
 
 - Finally, you will want to create a pull request. This will merge the code from your newly **completed** feature branch into your `master` branch.
 
