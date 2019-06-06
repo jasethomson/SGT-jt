@@ -1,4 +1,4 @@
-Instructions - Calculation of stored values
+Instructions - Pulling Student Info from Server
 --
 
 ### Overview
@@ -18,6 +18,12 @@ In this feature, You will add the functionality of pulling student info from a s
   - The Following will be done in the SGT template class
     - Declare a method that will be used to retrieve the student data from the server
       - It takes no paramaters
+      - It will send the following data to the server
+        - The api key you were given
+      - It will return the following from the server
+        - An object literal which contains:
+          - A boolean on whether the server request was successful
+          - The student data if the request was successful
     - Create a click handler in the `addEventHandlers` method that will take the new data retrieval method as a callback
       - test your click handler to make sure your data retrieval method is called correctly
     - In the data retrieval method:
@@ -46,8 +52,17 @@ In this feature, You will add the functionality of pulling student info from a s
             - note the global callbacks, but do not use them!
       - Once you are receiving the requested data from the server:
         - perform the following in your `success` callback
-          - Store the students in `this.data`
-          - Call your `displayAllStudents` method to update the DOM with the data that you received
+          - Create a student object for each of the students in the reaponse object and store them in `this.data`
+            - Remember that you have a method to create students...
+              - It may require modification
+              - Note the order at which you pass the paramaters into it when calling it
+            - Note the IDs that accompany each student
+              - You will no longer be generating IDs for students
+                - This is the DB's job
+              - This information will be used in later operations
+                - Deleting Students
+                - Updating Students
+          - Call your `displayAllStudents` method to update the DOM with the new student objects you created with the data that you received from the server
       - Congrats! You have completed this Feature Set
 
 
