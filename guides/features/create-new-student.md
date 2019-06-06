@@ -28,7 +28,7 @@ In this feature, You will add the functionality of being able to calculate and d
       - An array of errors if any errors occurred during the request
       - The new database generated ID of the student you added
     - In the add student method:
-      - Use an AJAX call to the Learning Fuze SGT API to pull all of the student records from the server:
+      - Use an AJAX call to the Learning Fuze SGT API to add a new student to the server:
       - Build this method as you did the previous method
         - API configuration object information:
             - datatype:
@@ -39,9 +39,9 @@ In this feature, You will add the functionality of being able to calculate and d
               - This key will contain the object you are sending to the server
                 - The object will have four keys:
                   - `"api_key"`
-                  - name
-                  - course
-                  - grade
+                  - `name`
+                  - `course`
+                  - `grade`
                 - Make sure to assign the proper data to the proper key
             - success:
               - Callback function that will run if your api call is successful
