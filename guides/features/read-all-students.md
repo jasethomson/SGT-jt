@@ -3,7 +3,7 @@ Instructions - Pulling Student Info from Server
 
 ### Overview
 
-In this feature, You will add the functionality of pulling student info from a server and render it on the page.
+In this feature, You will add the functionality of pulling student info from a server and rendering it on the page.
 
 <details>
 <summary>1. Where to Begin</summary>

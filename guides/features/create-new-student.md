@@ -3,7 +3,7 @@ Instructions - Adding a New Student to the Server
 
 ### Overview
 
-In this feature, You will add the functionality of being able to calculate and display the two numbers and operator you were able to store and display from the previous feature set.
+In this feature, You will add the functionality of being able to add a new student to the server and updating the DOM with the new student.
 
 <details>
 <summary>1. Where to Begin</summary>

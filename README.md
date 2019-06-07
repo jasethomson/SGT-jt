@@ -14,7 +14,7 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 #### Feature Set #6 *Delete a student by ID* - [Instructions](guides/features/delete-student.md)
 #### Feature Set #7 *Autocomplete courses and Updating a student* - [Instructions](guides/features/autocomplete-update.md)
 #### "Portfolio Requirement" *SGT Backend* - [Instructions](guides/features/sgt-backend.md)
-#### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](guides/features/bootstrap4-conversion.md)
+#### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](guides/features/bootstrap-4-conversion.md)
 ####  "Optional React Conversion" *SGT React* - [Instructions](guides/features/sgt-react.md)
 
 
