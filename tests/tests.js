@@ -22,7 +22,7 @@ function student_tests(){
 	var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
 
 	if(testMethod( student, 'getData')) return;
-	
+
 	try{
 		var result = student.getData();
 		var result2 = student2.getData();
@@ -202,7 +202,7 @@ function sgt_tests(){
 			}
 		}
 		if(i===eventData.click.length){
-			throw( new Error('Could not find handleAdd as a click handler on the add button'));
+			throw( new Error('Could not find handleCancel as a click handler on the add button'));
 		}
 	} catch( error ){
 		displayMessage(['error with SGT addEventHandlers: ',error],'error');
@@ -274,19 +274,19 @@ function sgt_tests(){
 		if(items.length!==4){
 			throw new Error(`SGT_template was given another student, again with no id. (createStudent('student5','math',50)), should now have 4 items, but had ${items.length}`)
 		}
-		if(testSGT.data['4']===undefined){
+		if(testSGT.data['5']===undefined){
 			throw new Error(`SGT_template was given another student with no id, but the next id slot was taken by a previous entry.  It should have added this student at the next available ID of 4, but did not`)
 		}
-		if(testSGT.data['4'].getData().name!=='student5'){
+		if(testSGT.data['5'].getData().name!=='student5'){
 			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a name of student5, but had ${testSGT.data['4'].getData().name}`)
 		}
-		if(testSGT.data['4'].getData().course!=='math'){
+		if(testSGT.data['5'].getData().course!=='math'){
 			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a course of math, but had ${testSGT.data['4'].getData().course}`)
 		}
-		if(typeof testSGT.data['4'].getData().grade !== 'number'){
+		if(typeof testSGT.data['5'].getData().grade !== 'number'){
 			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of type ${typeof testSGT.data['4'].getData().grade}`)
 		}
-		if(testSGT.data['4'].getData().grade !== 50){
+		if(testSGT.data['5'].getData().grade !== 50){
 			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of number 50, but had ${testSGT.data['4'].getData().grade}`)
 		}
 		elementSelectors.nameInput.val('name');
@@ -294,7 +294,7 @@ function sgt_tests(){
 		elementSelectors.gradeInput.val(100);
 		elementSelectors.addButton.click();
 		items = Object.values(testSGT.data);
-		var studentData = testSGT.data[5].getData();
+		var studentData = testSGT.data[6].getData();
 		console.log(studentData);
 		var dom = $("#displayArea > tr:nth-of-type(5)");
 		if(items.length!==5){
@@ -383,6 +383,7 @@ function sgt_tests(){
 		console.log(dom);
 		var result = dom.find('td:nth-of-type(1)').text()
 		if(result!=='john'){
+			//TODO Might want to add something that says ("check your display all students method");
 			throw new Error(`Name input had 'john' in it when add was clicked, but created Student dom element has a name of ${result}`)
 		}
 		var result = dom.find('td:nth-of-type(2)').text()
@@ -462,11 +463,11 @@ function sgt_tests(){
 		if($("#displayArea tr").length===5){
 			throw new Error(`delete button on fourth student ("name") was clicked, but a row wasn't deleted`);
 		}
-		if(beforeAllStudents.length === afterAllStudents.length+1){
+		if(beforeAllStudents.length === afterAllStudents.length){
 			throw new Error(`delete button on fourth student ("name") was clicked, but there are still ${beforeAllStudents.length} students in the SGT `);
 		}
 		if($("#displayArea tr td").eq(0).text()==='student3'){
-			throw new Error(`delete button on fourth student ("name") was clicked, but still reading that a student with name 'student3' is in the dom`);			
+			throw new Error(`delete button on fourth student ("name") was clicked, but still reading that a student with name 'student3' is in the dom`);
 		}
 
 	} catch( error ){
@@ -488,7 +489,7 @@ function startTests(){
 			return;
 		i++;
 	}
-	displayMessage(' All tests passed! ', 'header');	
+	displayMessage(' All tests passed! ', 'header');
 }
 
 
@@ -500,7 +501,7 @@ function displayMessage(message, type='error'){
 	} else {
 		wholeMessage = modalMessage = message;
 	}
-	
+
 
 
 	if(modalMessage instanceof Error){
@@ -518,7 +519,7 @@ function displayMessage(message, type='error'){
 		advisor = '';
 	}
 	var element = $("<div>").text(preppedMessage).addClass(type + ' errorMessage');
-	
+
 	$("#errorArea").prepend(element, advisor);
 }
 
@@ -593,25 +594,3 @@ function hideModal(){
 	modalContents.hide();
 	//shadow.hide();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
