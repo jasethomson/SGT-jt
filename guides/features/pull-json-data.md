@@ -3,11 +3,10 @@ Instructions - Pulling JSON Data
 
 ### Overview
 
-In this feature, You will add the functionality of being able to pull student data from an external file.
+In this feature, you will add the functionality of being able to pull student data from an external file. This will be the first step in understanding how to make a request to a file on your local filesystem. When complete with this functionality, you will modify this request to be made to get data from an external webserver.
 
 <details>
-<summary>1. Instructions coming soon! </summary>
-
+<summary>1. Where to Begin</summary>
 
 
 

@@ -8,11 +8,11 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 
 #### Feature Set #1 The *Student class* - [Instructions](guides/features/student-class.md)
 #### Feature Set #2 The *SGT_template class* - [Instructions](guides/features/sgt-template-class.md)
-#### Feature Set #3 *Pull JSON Data* - [Instructions](guides/features/pull-json-data.md)
-#### Feature Set #4 *Read all students* - [Instructions](guides/features/read-all-students.md)
-#### Feature Set #5 *Create a new student* - [Instructions](guides/features/create-new-student.md)
-#### Feature Set #6 *Delete a student by ID* - [Instructions](guides/features/delete-student.md)
-#### Feature Set #7 *Autocomplete courses and Updating a student* - [Instructions](guides/features/autocomplete-update.md)
+<!-- #### Feature Set #3 *Pull JSON Data* - [Instructions](guides/features/pull-json-data.md) -->
+#### Feature Set #3 *Read all students* - [Instructions](guides/features/read-all-students.md)
+#### Feature Set #4 *Create a new student* - [Instructions](guides/features/create-new-student.md)
+#### Feature Set #5 *Delete a student by ID* - [Instructions](guides/features/delete-student.md)
+#### Feature Set #6 *Autocomplete courses and Updating a student* - [Instructions](guides/features/autocomplete-update.md)
 #### "Portfolio Requirement" *SGT Backend* - [Instructions](guides/features/sgt-backend.md)
 #### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](guides/features/bootstrap-4-conversion.md)
 ####  "Optional React Conversion" *SGT React* - [Instructions](guides/features/sgt-react.md)
