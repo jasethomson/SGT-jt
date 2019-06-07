@@ -6,8 +6,8 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 - It has template files for the JS
 - It has an auto-tester that will give you feedback on your code
 
-#### Feature Set #1 The *Student class* - <a target="_blank" href="guides/features/student-class.md">Instructions</a>
-#### Feature Set #2 The *SGT_template class* - <a  href="guides/features/sgt-template-class.md" target="_blank">Instructions</a>
+#### Feature Set #1 The *Student class* - [Instructions](guides/features/student-class.md){target="_blank"}
+#### Feature Set #2 The *SGT_template class* - [Instructions](guides/features/sgt-template-class.md)
 #### Feature Set #3 *Pull JSON Data* - [Instructions](guides/features/pull-json-data.md)
 #### Feature Set #4 *Read all students* - [Instructions](guides/features/read-all-students.md)
 #### Feature Set #5 *Create a new student* - [Instructions](guides/features/create-new-student.md)
