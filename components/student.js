@@ -45,7 +45,7 @@ class Student{
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		return this.data;
+
 	}
 
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
@@ -65,23 +65,6 @@ class Student{
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
-		var tr = $("<tr>");
-		var nameTD = $("<td>").text(this.data.name);
-		var courseTD = $("<td>").text(this.data.course);
-		var gradeTD = $("<td>").text(this.data.grade);
-		var operationsTD = $("<td>");
-		var deleteButton = $("<button>").on("click", this.handleDelete).text("delete");
-		$(operationsTD).append(deleteButton);
-		$(tr).append(nameTD, courseTD, gradeTD, operationsTD);
-		this.domElements.row = tr;
-		this.domElements.name = nameTD;
-		this.domElements.course = courseTD;
-		this.domElements.grade = gradeTD;
-		this.domElements.operations = operationsTD;
-		this.domElements.deleteButton = deleteButton;
-		return tr;
-
-		//TODO after completion of render, should be instructed to look at handleDelete;
 
 	}
 
@@ -92,11 +75,6 @@ class Student{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-		console.log("handleDelete");
-		this.deleteCallback(this.data.id);
-		$(this.domElements.row).remove();
-
-
 
 	}
 
@@ -114,32 +92,9 @@ class Student{
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update( field, value ){
-		console.log(field);
-		if (typeof field !== "number" && typeof field !== "string") {
-			return false;
-		}
+	update( ){
 
-		switch (field) {
-			case "id":
-			  this.data.id = value;
-			  break;
-			case "name":
-			  this.data.name = value;
-			  $(this.domElements.name).text(value);
-			  break;
-			case "course":
-			  this.data.course = value;
-			  $(this.domElements.course).text(value);
-			  break;
-			case "grade":
-			  this.data.grade = parseInt(value);
-			  $(this.domElements.grade).text(value);
-			  break;
-
-
-
-		}
+		
 
 	}
 }
