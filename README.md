@@ -11,11 +11,11 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 #### Feature Set #3 *Pull JSON Data* - [Instructions]()
 #### Feature Set #4 *Read all students* - [Instructions](guides/features/read-all-students.md)
 #### Feature Set #5 *Create a new student* - [Instructions](guides/features/create-new-student.md)
-#### Feature Set #6 *Delete a student by ID* - [Instructions](https://yo.com)
-#### Feature Set #7 *Autocomplete courses and Updating a student* - [Instructions](https://yo.com)
-#### "Portfolio Requirement" *SGT Backend* - [Instructions](https://yo.com)
-#### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](https://yo.com)
-####  "Optional React Conversion" *SGT React* - [Instructions](https://yo.com)
+#### Feature Set #6 *Delete a student by ID* - [Instructions](guides/features/delete-student.md)
+#### Feature Set #7 *Autocomplete courses and Updating a student* - [Instructions](guides/features/autocomplete-update.md)
+#### "Portfolio Requirement" *SGT Backend* - [Instructions](guides/features/sgt-backend.md)
+#### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](guides/features/bootstrap4-conversion.md)
+####  "Optional React Conversion" *SGT React* - [Instructions](guides/features/sgt-react.md)
 
 ## Getting Started
 > - Are you on your master branch?
