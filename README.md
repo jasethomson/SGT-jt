@@ -17,27 +17,6 @@ This `master` branch is the starting point. The HTML/CSS has already been made. 
 #### "Portfolio Requirement" *BootStrap 4 conversion* - [Instructions](guides/features/bootstrap4-conversion.md)
 ####  "Optional React Conversion" *SGT React* - [Instructions](guides/features/sgt-react.md)
 
-## Getting Started
-> - Are you on your master branch?
->   - **Yes** - continue to "Pull Latest Changes"
->   - **I dont know** Run the command below
->       - `git branch` - this will highlight the branch you are currently on
->   - **No** - Make sure you `git add .` and `git commit` to your current branch before you switch to your master branch
-> - Pull Latest Changes
->   - `git checkout master`
->   - `git pull https://github.com/Learning-Fuze/SGT.git master` - **Now continue with the next steps**
-> - Create a feature branch
->   - `git checkout -b v0.1`
-> - Work on the scope defined for the current version
-> - Add files to git
->   - `git add .`
-> - Commit files (Group files together)
->   - `git commit -m "SGT v0.1 - Your Name"`
->   - **Replace "Your Name" with your first and last name**
-> - Send to gitHub (Push)
->   - `git push origin v0.1`
-> - Continue forward to next version
->   - `git checkout -b v1.0`
 
 ## Scope
 > - JS Functionality
