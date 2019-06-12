@@ -14,8 +14,10 @@ In this feature, You will be constructing the student object and all of its func
     - Read through the comments in the file
         - familiarize yourself with the structure of the object, the methods it contains, and the data it will receive
     - Now that you are familiar with your environment
-        - Begin working in the `render` method
-            - The instructions above the `render` method will tell you the required functionality
+        - Begin working in the `getData` method
+            - The instructions above the method will describe the functionality
+            - When you are complete with this method, move on to the `render` method
+        - As with the `getData` method, the instructions above the `render` method will tell you the required functionality
         - To test your work:
             - Run the application
                 - Note the errors that are displayed at the bottom of the screen

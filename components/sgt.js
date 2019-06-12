@@ -5,14 +5,19 @@ class SGT_template{
 	/* constructor - sets up SGT object and storage of students
 	params: (object) elementConfig - all pre-made dom elements used by the app
 	purpose: stores the appropriate DOM elements inside of an object
-		and uses those reference for later portions of the application
+		and uses those element references for later portions of the application.
+		Also, stores all created student objects in this.data.
+		Finally, binds methods that need to be bound
 	return: undefined
 	*/
-	constructor(  ){
-		
+	constructor( elementConfig ){
+		this.elementConfig = elementConfig; /* console.log elementConfig to note what data you have access to */
+		this.data = {};
+
 
 	}
 	/* addEventHandlers - add event handlers to premade dom elements
+	make sure to use the element references that were passed into the constructor (see elementConfig)
 	adds click handlers to add and cancel buttons using the dom elements passed into constructor
 	params: none
 	return: undefined
@@ -49,9 +54,13 @@ class SGT_template{
 		grade: the student's grade
 		id: the id of the student
 	purpose:
-			If no id is present, it must pick the next available id that can be used
-			when it creates the Student object, it must pass the id, name, course, grade,
-			and a reference to SGT's deleteStudent method
+			If no id is present, it must pick the next available id that can be used in the this.data object
+			{object.keys is helpful for this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}
+			If the id of the student to be created already exists, the method should return false
+			{You should use the "doesStudentExist" method below to see if the student id exists}
+			Once you have all the neccessary data, including an ID, name, course, and grade, create the new student.
+			You must pass the id, name, course, grade, and a reference to SGT's deleteStudent method to properly create a student!
+			Finally, store the student in the this.data object at a key that matches the students id
 	params:
 		name : the student's name
 		course : the student's course
@@ -65,7 +74,7 @@ class SGT_template{
 	}
 
 	/* doesStudentExist -
-		deermines if a student exists by ID.  returns true if yes, false if no
+		determines if a student exists by ID.  returns true if yes, false if no
 	purpose:
 			check if passed in ID is a value, if it exists in this.data, and return the presence of the student
 	params:
@@ -78,7 +87,10 @@ class SGT_template{
 	}
 
 	/* handleAdd - function to handle the add button click
-	purpose: grabs values from inputs, utilizes the createStudent method to save them, then clears the inputs and displays all students
+	purpose: grabs values from inputs,
+	utilizes the createStudent method to create the	student,
+	stores the created student in this.data at the appropiate key,
+	then clears the inputs and displays all students
 	params: none
 	return: undefined
 	ESTIMATED TIME: 1 hour
