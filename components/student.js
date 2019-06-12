@@ -10,7 +10,8 @@ class Student{
 		(string) name - the name of the student
 		(string) course - the course of the student
 		(number) grade - the grade of the student
-		(function) deleteCallback - the removal function from the SGT_template to call when this student wants to be removed from the SGT_templates's list
+		(function) deleteCallback - the student removal method passed in as a callback
+		from the SGT_template to call when this student wants to be removed from the SGT_templates's list
 	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
 	ESTIMATED TIME: 30 minutes to understand
 	*/
@@ -58,7 +59,8 @@ class Student{
 		put the 4 TDs inside the TR.
 		Add the button to the operation TD
 		add the StudentRecord's handleDelete method to the delete button's click handler
-		store all these values for any needed changes later
+		store all of the element references as properties in the this.domElements object
+		for any DOM updates (see this.domElements in the constructor)
 		return the TR
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
@@ -70,8 +72,9 @@ class Student{
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
 	purpose:
-		call the callback that was passed into the constructor - give it this object's reference
-		remove this object's dom element row to erase the entire dom element
+		call the callback that was passed into the constructor - give it this object's id
+		remove this object's dom element row to erase the entire dom element (should be the element
+		reference you stored in this.domElements)
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
@@ -80,10 +83,10 @@ class Student{
 
 	/* update - change a value in the student record
 	purpose: ensure that the field is one that can be changed (either id, name, course, or grade)
-		if not changable, return false
-		otherwise update the value
-			save the value into the properties stored in the constructor
-			go to the dom element of the appropriate field and change the text
+		if not one of these properties, return false
+		otherwise update the value of the associated field
+			save the value into the properties stored in the constructor (see this.data)
+			go to the dom element of the appropriate field and change the text (see this.domElements)
 				(for example, if name was changed, go to the student's name TD and change the name as well)
 			and return true
 	params:
@@ -94,7 +97,7 @@ class Student{
 	*/
 	update( ){
 
-		
+
 
 	}
 }
