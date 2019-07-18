@@ -1,6 +1,6 @@
 
 
-class Student{
+class Student {
 	/* constructor - take in params for the student and save them,
 		create storage for student dom elements
 		store the deletion callback from the SGT_template class
@@ -46,7 +46,11 @@ class Student{
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-
+		
+		
+		
+		
+		sdfsdf;
 	}
 
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:

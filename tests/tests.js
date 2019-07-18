@@ -1,162 +1,236 @@
-function student_tests(){
-	displayMessage('--Student Records Test', 'header');
-	if(typeof Student === 'undefined' ){
-		displayMessage('Student object does not exist.  Check components/student.js and make sure the object is defined still and there are no syntax errors in the console');
-		return;
-	}
-	var testVal = false;
-	function testCallback(input){
-		if(input === undefined){
-			throw new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned undefined');
-		}
-		if(typeof input !== 'number'){
-			throw( new Error('click callback for delete button did not provide an argument of the Student id (a number) that was clicked.  returned ' + JSON.stringify( input )));
-		}
-		testVal = true;
-	}
-	var testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100};
-	var testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50'};
-	var testStudent3 = { id: 2, name: 'name3', course: 'course3', grade: '60'};
-	var student = new Student(testStudent1.id,testStudent1.name,testStudent1.course,testStudent1.grade,testCallback);
-	var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
-	var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
+class TestError extends Error {
+	constructor(className, method, message, error = null) {
+		super(message);
 
-	if(testMethod( student, 'getData')) return;
-
-	try{
-		var result = student.getData();
-		var result2 = student2.getData();
-		if(!(result instanceof Object)){
-			throw new Error('getData did not return an standard object like it was supposed to')
-		}
-		if(result.id!==testStudent1.id){
-			throw new Error(`student was created with an id of ${testStudent1.id}, but getData returned an id of ${result.id}`);
-		}
-		if(result.name!==testStudent1.name){
-			throw new Error(`student was created with an name of ${testStudent1.name1}, but getData returned a name of ${result.name}`);
-		}
-		if(result.course!==testStudent1.course){
-			throw new Error(`student was created with an course of ${testStudent1.course}, but getData returned a course of ${result.course}`);
-		}
-		if(result.grade!=testStudent1.grade	){
-			throw new Error(`student was created with an grade of ${testStudent1.grade}, but getData returned a grade of ${result.grade}`);
-		}
-		if(typeof result.grade!== 'number'	){
-			throw new Error('student was created with an grade of type number, but getData returned a grade of type ' + typeof result.grade);
-		}
-		if(result2.grade!=testStudent2.grade	){
-			throw new Error(`student was created with an grade of ${testStudent2.grade}, but getData returned a grade of ${result2.grade}`);
-		}
-		if(typeof result2.grade!== 'number'	){
-			throw new Error(`student was created with an grade of type string but should have been converted to a number.  getData returned a grade of type typeof ${result.grade}.  Either the number was stored in constructor wrong, or returned from getData wrong`);
-		}
-	} catch( error ){
-		displayMessage(['error with Student getData(): ', error],'error');
-		return;
-	}
-	displayMessage('getData method passed','message');
-	try{
-		var dom = student.render();
-		$("#displayArea").append(dom);
-		if($("#displayArea tr").length!==1){
-			throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
-		}
-		var selectedChildren = $("#displayArea tr td")
-		if(selectedChildren.length!==4){
-			throw( new Error('render returned tr should have had 4 tds in it.  It only had ' + selectedChildren.length));
-		}
-		if(selectedChildren.eq(0).text()!==testStudent1.name){
-			throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text()}`));
-		}
-		if(selectedChildren.eq(1).text()!==testStudent1.course){
-			throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text()}`));
-		}
-		if(selectedChildren.eq(2).text()!=testStudent1.grade){
-			throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text()}`));
-		}
-		var deleteButton = selectedChildren.eq(3).find('button');
-		if(deleteButton.length!==1){
-			throw( new Error(`render fourth td should have had a button inside of it, but didn't`));
-		}
-		if(deleteButton.text()!=='delete'){
-			throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
-		}
-
-	} catch( error ){
-		displayMessage(['error with Student render(): ', error],'error');
-		return;
-	}
-	try{
-		deleteButton.click();
-		if(testVal!==true){
-			throw( new Error(`delete button was called, but didn't properly execute callback function`));
-		}
-		if($("#displayArea > tr").length!==0){
-			throw( new Error(`Student's tr should be removed after delete called, but was not`))
-		}
-	} catch( error ){
-		displayMessage(['error with Student handleDelete(): ', error],'error');
-		return;
+		this.method = method;
+		this.name = className;
+		this.originalError = error;
 	}
 
-	try{
-		var dom = student3.render();
-		$("#displayArea").append(dom);
-		if($("#displayArea tr").length!==1){
-			throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
-		}
-		testStudent3.name = "name4";
-		testStudent3.course = "course4";
-		testStudent3.grade = "75";
-		student3.update("name", testStudent3.name);
-		student3.update("course", testStudent3.course);
-		student3.update("grade", testStudent3.grade);
+	displayError() {
+		const text = `${this.name}${this.method ? `.${this.method}()` : '' } Failed Test | ${this.message}`;
 
-		var result = student3.getData();
-		if(result.name!==testStudent3.name){
-			throw( new Error(`update should have updated the data property with the student name to ${testStudent3.name}, but getData returned ${result.name}`));
-		}
-		if(result.course!==testStudent3.course){
-			throw( new Error(`update should have updated the data property with the student course to ${testStudent3.course}, but getData returned ${result.course}`));
-		}
-		if(typeof result.grade!== 'number'	){
-			throw new Error('update of the student grade should have changed to type number, but getData returned a grade of type ' + typeof result.grade);
-		}
-		if(result.grade!=testStudent3.grade){
-			throw( new Error(`update should have updated the data property with the student grade to ${testStudent3.grade}, but getData returned ${result.grade}`));
-		}
-		var selectedChildren = $("#displayArea tr td");
-		if(selectedChildren.length!==4){
-			throw( new Error('update should not remove the tr that has 4 tds in it.  It only had ' + selectedChildren.length));
-		}
-		if(selectedChildren.eq(0).text()!==testStudent3.name){
-			throw( new Error(`update first td should now have had the student name of ${testStudent3.name}, but it had ${selectedChildren.eq(0).text()}`));
-		}
-		if(selectedChildren.eq(1).text()!==testStudent3.course){
-			throw( new Error(`update second td should now have had the student course of ${testStudent3.course}, but it had ${selectedChildren.eq(1).text()}`));
-		}
-		if(selectedChildren.eq(2).text()!=testStudent3.grade){
-			throw( new Error(`update third td should now have had the student grade of ${testStudent3.grade}, but it had ${selectedChildren.eq(2).text()}`));
-		}
-		var deleteButton = selectedChildren.eq(3).find('button');
-		if(deleteButton.length!==1){
-			throw( new Error(`update fourth td should have had a button inside of it, but didn't`));
-		}
-		if(deleteButton.text()!=='delete'){
-			throw( new Error(`update fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
-		}
-		deleteButton.click();
+		const element = $('<div>', { class: 'error errorMessage', text });
 
-	} catch( error ){
-		displayMessage(['error with Student update(): ', error],'error');
-		return;
+		let lineInfo = null;
+
+		if(this.originalError){
+			
+		}
+
+		$("#errorArea").prepend(element);
+
+		// console.error(this.originalError || this);
+
+
+
+		let stackOutput = {};
+
+		// Error.captureStackTrace(stackOutput, this.originalError);
+		const lineNumber = /student\.js:(\d+)/.exec(this.originalError.stack)[1];
+
+		console.log('Stack Output:', lineNumber);
 	}
-	displayMessage('update method passed','message');
-	displayMessage('StudentRecord passed all tests','green');
-	return true;
 }
 
+class SectionError {
+	constructor(className) {
+		this.name = className;
+	}
 
+	throw(testMethod, errorMessage) {
+		return new TestError(this.name, testMethod, errorMessage);
+	}
+}
+
+function student_tests(){
+	const studentError = new SectionError('Student');
+
+	try {
+		displayMessage('--Student Records Test', 'header');
+		if(typeof Student === 'undefined'){
+			throw studentError.throw(null, 'Student object does not exist. Check components/student.js and make sure the object is still defined and there are no syntax errors in the console.');
+		}
+		var testVal = false;
+		function testCallback(input){
+			if(input === undefined){
+				throw new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned undefined');
+			}
+			if(typeof input !== 'number'){
+				throw( new Error('click callback for delete button did not provide an argument of the Student id (a number) that was clicked.  returned ' + JSON.stringify( input )));
+			}
+			testVal = true;
+		}
+		var testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100};
+		var testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50'};
+		var testStudent3 = { id: 2, name: 'name3', course: 'course3', grade: '60'};
+		var student = new Student(testStudent1.id,testStudent1.name,testStudent1.course,testStudent1.grade,testCallback);
+		var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
+		var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
+
+		try{
+			const hasGetData = hasMethod(student, 'getData');
+			if( hasGetData !== true){
+				throw studentError.throw('getData', hasGetData);
+			}
+
+			var result = student.getData();
+			var result2 = student2.getData();
+
+			throw studentError.throw(null, 'This is a test');
+			if(!(result instanceof Object)){
+				throw new Error('getData did not return an standard object like it was supposed to')
+			}
+			if(result.id!==testStudent1.id){
+				throw new Error(`student was created with an id of ${testStudent1.id}, but getData returned an id of ${result.id}`);
+			}
+			if(result.name!==testStudent1.name){
+				throw new Error(`student was created with an name of ${testStudent1.name1}, but getData returned a name of ${result.name}`);
+			}
+			if(result.course!==testStudent1.course){
+				throw new Error(`student was created with an course of ${testStudent1.course}, but getData returned a course of ${result.course}`);
+			}
+			if(result.grade!=testStudent1.grade	){
+				throw new Error(`student was created with an grade of ${testStudent1.grade}, but getData returned a grade of ${result.grade}`);
+			}
+			if(typeof result.grade!== 'number'	){
+				throw new Error('student was created with an grade of type number, but getData returned a grade of type ' + typeof result.grade);
+			}
+			if(result2.grade!=testStudent2.grade	){
+				throw new Error(`student was created with an grade of ${testStudent2.grade}, but getData returned a grade of ${result2.grade}`);
+			}
+			if(typeof result2.grade!== 'number'	){
+				throw new Error(`student was created with an grade of type string but should have been converted to a number.  getData returned a grade of type typeof ${result.grade}.  Either the number was stored in constructor wrong, or returned from getData wrong`);
+			}
+		} catch( error ){
+			
+			handleError(error, 'Student', 'getData');
+
+			return;
+		}
+		displayMessage('getData method passed','message');
+		try{
+			var dom = student.render();
+			$("#displayArea").append(dom);
+			if($("#displayArea tr").length!==1){
+				throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
+			}
+			var selectedChildren = $("#displayArea tr td")
+			if(selectedChildren.length!==4){
+				throw( new Error('render returned tr should have had 4 tds in it.  It only had ' + selectedChildren.length));
+			}
+			if(selectedChildren.eq(0).text()!==testStudent1.name){
+				throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text()}`));
+			}
+			if(selectedChildren.eq(1).text()!==testStudent1.course){
+				throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text()}`));
+			}
+			if(selectedChildren.eq(2).text()!=testStudent1.grade){
+				throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text()}`));
+			}
+			var deleteButton = selectedChildren.eq(3).find('button');
+			if(deleteButton.length!==1){
+				throw( new Error(`render fourth td should have had a button inside of it, but didn't`));
+			}
+			if(deleteButton.text()!=='delete'){
+				throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+			}
+
+		} catch( error ){
+			displayMessage(['error with Student render(): ', error],'error');
+			return;
+		}
+		try{
+			deleteButton.click();
+			if(testVal!==true){
+				throw( new Error(`delete button was called, but didn't properly execute callback function`));
+			}
+			if($("#displayArea > tr").length!==0){
+				throw( new Error(`Student's tr should be removed after delete called, but was not`))
+			}
+		} catch( error ){
+			displayMessage(['error with Student handleDelete(): ', error],'error');
+			return;
+		}
+
+		try{
+			var dom = student3.render();
+			$("#displayArea").append(dom);
+			if($("#displayArea tr").length!==1){
+				throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
+			}
+			testStudent3.name = "name4";
+			testStudent3.course = "course4";
+			testStudent3.grade = "75";
+			student3.update("name", testStudent3.name);
+			student3.update("course", testStudent3.course);
+			student3.update("grade", testStudent3.grade);
+
+			var result = student3.getData();
+			if(result.name!==testStudent3.name){
+				throw( new Error(`update should have updated the data property with the student name to ${testStudent3.name}, but getData returned ${result.name}`));
+			}
+			if(result.course!==testStudent3.course){
+				throw( new Error(`update should have updated the data property with the student course to ${testStudent3.course}, but getData returned ${result.course}`));
+			}
+			if(typeof result.grade!== 'number'	){
+				throw new Error('update of the student grade should have changed to type number, but getData returned a grade of type ' + typeof result.grade);
+			}
+			if(result.grade!=testStudent3.grade){
+				throw( new Error(`update should have updated the data property with the student grade to ${testStudent3.grade}, but getData returned ${result.grade}`));
+			}
+			var selectedChildren = $("#displayArea tr td");
+			if(selectedChildren.length!==4){
+				throw( new Error('update should not remove the tr that has 4 tds in it.  It only had ' + selectedChildren.length));
+			}
+			if(selectedChildren.eq(0).text()!==testStudent3.name){
+				throw( new Error(`update first td should now have had the student name of ${testStudent3.name}, but it had ${selectedChildren.eq(0).text()}`));
+			}
+			if(selectedChildren.eq(1).text()!==testStudent3.course){
+				throw( new Error(`update second td should now have had the student course of ${testStudent3.course}, but it had ${selectedChildren.eq(1).text()}`));
+			}
+			if(selectedChildren.eq(2).text()!=testStudent3.grade){
+				throw( new Error(`update third td should now have had the student grade of ${testStudent3.grade}, but it had ${selectedChildren.eq(2).text()}`));
+			}
+			var deleteButton = selectedChildren.eq(3).find('button');
+			if(deleteButton.length!==1){
+				throw( new Error(`update fourth td should have had a button inside of it, but didn't`));
+			}
+			if(deleteButton.text()!=='delete'){
+				throw( new Error(`update fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+			}
+			deleteButton.click();
+
+		} catch( error ){
+			displayMessage(['error with Student update(): ', error],'error');
+			return;
+		}
+		displayMessage('update method passed','message');
+		displayMessage('StudentRecord passed all tests','green');
+		return true;
+	} catch(error) {
+		handleError(error);
+	}
+}
+
+function handleError(error, className = null, method = null){
+	if(error instanceof TestError){
+		return error.displayError();
+	}
+
+	const userMessage = 'This is most likely an error caused by your code';
+
+	if(className){
+		const testError = new TestError(className, method, `${error.message} | ${userMessage}`, error);
+
+		
+		// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
+
+		return testError.displayError();
+	}
+
+	displayMessage([userMessage, error]);
+}
 
 function sgt_tests(){
 	displayMessage('--SGT tests', 'header');
@@ -521,6 +595,20 @@ function displayMessage(message, type='error'){
 	var element = $("<div>").text(preppedMessage).addClass(type + ' errorMessage');
 
 	$("#errorArea").prepend(element, advisor);
+}
+
+function hasMethod(object, method){
+	const name = object.constructor.name;
+
+	if (object[method] === undefined) {
+		return `Missing ${method} method in ${name}`;
+	}
+
+	if(typeof object[method] !== 'function') {
+		return `${name} has a property named ${method} but it is not a method. Expected ${name}.${method} to be a method.`;
+	}
+
+	return true;
 }
 
 function testMethod( object, method ){
