@@ -1,10 +1,21 @@
 class TestError extends Error {
-	constructor(className, method, message, error = null) {
+	constructor(className, method, message, error = null, filePath = null) {
 		super(message);
 
+		this.filePath = filePath;
 		this.method = method;
 		this.name = className;
 		this.originalError = error;
+	}
+
+	get escapedFilePath(){
+		if(this.filePath){
+
+
+			return this.filePath.replace(/(\/|\.|\-)/g, (char) => '\\' + char);
+		}
+
+		return null;
 	}
 
 	displayError() {
@@ -14,8 +25,15 @@ class TestError extends Error {
 
 		let lineInfo = null;
 
-		if(this.originalError){
-			
+		if(this.originalError && this.filePath){
+			console.log('Formatted File Path:', this.escapedFilePath);
+			const lineRegEx = new RegExp(`${this.escapedFilePath}:(\\d+)`);
+			console.log('Reg Ex:', lineRegEx);
+			const lineNumber = lineRegEx.exec(this.originalError.stack)[1];
+
+			// // /\/components\/student\.js:(\d+)/
+
+			console.log('Stack Output:', lineNumber);
 		}
 
 		$("#errorArea").prepend(element);
@@ -27,9 +45,7 @@ class TestError extends Error {
 		let stackOutput = {};
 
 		// Error.captureStackTrace(stackOutput, this.originalError);
-		const lineNumber = /student\.js:(\d+)/.exec(this.originalError.stack)[1];
-
-		console.log('Stack Output:', lineNumber);
+		
 	}
 }
 
@@ -45,6 +61,7 @@ class SectionError {
 
 function student_tests(){
 	const studentError = new SectionError('Student');
+	const filePath = 'components/student.js';
 
 	try {
 		displayMessage('--Student Records Test', 'header');
@@ -104,7 +121,7 @@ function student_tests(){
 			}
 		} catch( error ){
 			
-			handleError(error, 'Student', 'getData');
+			handleError(error, 'Student', 'getData', filePath);
 
 			return;
 		}
@@ -209,11 +226,11 @@ function student_tests(){
 		displayMessage('StudentRecord passed all tests','green');
 		return true;
 	} catch(error) {
-		handleError(error);
+		handleError(error, 'Student', null, filePath);
 	}
 }
 
-function handleError(error, className = null, method = null){
+function handleError(error, className = null, method = null, filePath = null){
 	if(error instanceof TestError){
 		return error.displayError();
 	}
@@ -221,7 +238,7 @@ function handleError(error, className = null, method = null){
 	const userMessage = 'This is most likely an error caused by your code';
 
 	if(className){
-		const testError = new TestError(className, method, `${error.message} | ${userMessage}`, error);
+		const testError = new TestError(className, method, `${error.message} | ${userMessage}`, error, filePath);
 
 		
 		// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
