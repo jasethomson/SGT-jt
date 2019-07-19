@@ -4,10 +4,11 @@
 class SGT_template{
 	/* constructor - sets up SGT object and storage of students
 	params: (object) elementConfig - all pre-made dom elements used by the app
-	purpose: stores the appropriate DOM elements inside of an object
-		and uses those element references for later portions of the application.
-		Also, stores all created student objects in this.data.
-		Finally, binds methods that need to be bound
+	purpose:
+		- stores the appropriate DOM elements inside of an object
+		and uses those element references for later portions of the application
+		- Also, stores all created student objects in this.data
+		- Finally, binds methods that need to be bound
 	return: undefined
 	*/
 	constructor( elementConfig ){
@@ -16,9 +17,10 @@ class SGT_template{
 
 
 	}
-	/* addEventHandlers - add event handlers to premade dom elements
+	/* addEventHandlers - add event handlers to pre-made dom elements
 	make sure to use the element references that were passed into the constructor (see elementConfig)
-	adds click handlers to add and cancel buttons using the dom elements passed into constructor
+	purpose:
+		adds click handlers to add and cancel buttons using the dom elements passed into constructor
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
@@ -29,7 +31,7 @@ class SGT_template{
 
 	}
 
-	/* clearInputs - take the three inputs and clear their values
+	/* clearInputs - Clear the values in the three form inputs
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
@@ -38,7 +40,7 @@ class SGT_template{
 
 	}
 
-	/* handleCancel - function to handle the cancel button press
+	/* handleCancel - function to handle the cancel button press (should clear out all values in the inputs)
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
@@ -55,11 +57,11 @@ class SGT_template{
 		id: the id of the student
 	purpose:
 			If no id is present, it must pick the next available id that can be used in the this.data object
-			{object.keys is helpful for this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}
+			{Object.keys is helpful for this: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}
 			If the id of the student to be created already exists, the method should return false
-			{You should use the "doesStudentExist" method below to see if the student id exists}
-			Once you have all the neccessary data, including an ID, name, course, and grade, create the new student.
-			You must pass the id, name, course, grade, and a reference to SGT's deleteStudent method to properly create a student!
+				- {You should use the "doesStudentExist" method below to see if the student id exists}
+			Once you have all the necessary data, including an ID, name, course, and grade, create the new student.
+			*** You MUST pass the id, name, course, grade, and a reference to SGT's deleteStudent method to properly create a student! ***
 			Finally, store the student in the this.data object at a key that matches the students id
 	params:
 		name : the student's name
@@ -87,10 +89,11 @@ class SGT_template{
 	}
 
 	/* handleAdd - function to handle the add button click
-	purpose: grabs values from inputs,
-	utilizes the createStudent method to create the	student,
-	stores the created student in this.data at the appropiate key,
-	then clears the inputs and displays all students
+	purpose:
+		- grabs values from inputs,
+		- utilizes the createStudent method to create the	student,
+		- stores the created student in this.data at the appropiate key,
+		- then clears the inputs and displays all students
 	params: none
 	return: undefined
 	ESTIMATED TIME: 1 hour
@@ -102,9 +105,9 @@ class SGT_template{
 	/* readStudent -
 		get the data for one or all students
 	purpose:
-			determines if ID is given or not
-			if ID is given, return the student by that ID, if present
-			if ID is not given, return all students in an array
+			- determines if ID is given or not
+				- if ID is given, return the student by that ID, if present
+				- if ID is not given, return all students in an array
 	params:
 		id: (number)(optional) the id of the student to search for, if any
 	return:
@@ -117,12 +120,12 @@ class SGT_template{
 
 	/* displayAllStudents - iterate through all students in the this.data object
 	purpose:
-		grab all students from this.data,
-		empty out every student in the dom's display area,
-		iterate through the retrieved list,
-		then render every student's dom element
-		then append every student to the dom's display area
-		then display the grade average
+		- grab all students from this.data,
+		- empty out every student in the dom's display area,
+		- iterate through the retrieved list,
+		- then render every student's dom element
+		- then append every student to the dom's display area
+		- then display the grade average
 	params: none
 	return: undefined
 	ESTIMATED TIME: 1.5 hours
@@ -132,7 +135,9 @@ class SGT_template{
 	}
 
 	/* displayAverage - get the grade average and display it
-	purpose: grab the average grade from students in this.data, and shows it on the dom
+	purpose:
+		- determine the average grade from students in this.data,
+		- and shows it on the dom
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
@@ -145,10 +150,10 @@ class SGT_template{
 	/* deleteStudent -
 		delete the given student at the given id
 	purpose:
-			determine if the ID exists in this.data
-			remove it from the object
-			return true if successful, false if not
-			this is often called by the student's delete button through the Student handleDelete
+			- determine if the ID exists in this.data
+			- remove it from the object
+			- return true if successful, false if not
+			(this is often called by the student's delete button through the Student handleDelete)
 	params:
 		id: (number) the id of the student to delete
 	return:
@@ -160,12 +165,12 @@ class SGT_template{
 	}
 
 	/* updateStudent -
-		not used for now.  Will be used later
+		*** not used for now.  Will be used later ***
 		pass in an ID, a field to change, and a value to change the field to
 	purpose:
-		finds the necessary student by the given id
-		finds the given field in the student (name, course, grade)
-		changes the value of the student to the given value
+		- finds the necessary student by the given id
+		- finds the given field in the student (name, course, grade)
+		- changes the value of the student to the given value
 		for example updateStudent(2, 'name','joe') would change the name of student 2 to "joe"
 	params:
 		id: (number) the id of the student to change in this.data

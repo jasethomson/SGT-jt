@@ -12,7 +12,7 @@ class Student{
 		(number) grade - the grade of the student
 		(function) deleteCallback - the student removal method passed in as a callback
 		from the SGT_template to call when this student wants to be removed from the SGT_templates's list
-	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
+	return: undefined (don't return undefined, it will screw it up a constructor, ***don't put a return***)
 	ESTIMATED TIME: 30 minutes to understand
 	*/
 	constructor(id, name, course, grade, deleteCallback=()=>{}){
@@ -55,13 +55,13 @@ class Student{
 		grade: the student's grade
 		operations: holds any buttons for the student - will hold a delete button
 	purpose:
-		create the TR and 4 TDs,
-		put the 4 TDs inside the TR.
-		Add the button to the operation TD
-		add the StudentRecord's handleDelete method to the delete button's click handler
-		store all of the element references as properties in the this.domElements object
-		for any DOM updates (see this.domElements in the constructor)
-		return the TR
+		- create the TR and 4 TDs,
+		- put the 4 TDs inside the TR.
+		- Add the button to the operation TD
+		- add the StudentRecord's handleDelete method to the delete button's click handler
+		- store all of the element references as properties in the this.domElements object
+			for any DOM updates (see this.domElements in the constructor)
+		- return the TR
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
 	ESTIMATED TIME: 2 hours
@@ -72,8 +72,8 @@ class Student{
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
 	purpose:
-		call the callback that was passed into the constructor - give it this object's id
-		remove this object's dom element row to erase the entire dom element (should be the element
+		- call the callback that was passed into the constructor - give it this object's id as an argument
+		- remove this object's dom element row to erase the entire dom element (should be the element
 		reference you stored in this.domElements)
 	ESTIMATED TIME: 15 minutes
 	*/
@@ -82,13 +82,15 @@ class Student{
 	}
 
 	/* update - change a value in the student record
-	purpose: ensure that the field is one that can be changed (either id, name, course, or grade)
-		if not one of these properties, return false
-		otherwise update the value of the associated field
-			save the value into the properties stored in the constructor (see this.data)
-			go to the dom element of the appropriate field and change the text (see this.domElements)
-				(for example, if name was changed, go to the student's name TD and change the name as well)
-			and return true
+	purpose:
+		- ensure that the field is one that can be changed (either id, name, course, or grade)
+			- if not one of these properties, return false
+			- otherwise,
+				- update the value of the associated field
+				- save the value into the properties stored in the constructor (see this.data)
+				- go to the dom element of the appropriate field and change the text (see this.domElements)
+					(for example, if name was changed, go to the student's name TD and change the name as well)
+				- return true
 	params:
 		(string) field - the field in the object to change
 		(multiple) value - the value to change the field to
