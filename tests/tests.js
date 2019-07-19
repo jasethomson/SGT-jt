@@ -8,10 +8,19 @@ class TestError extends Error {
 		this.originalError = error;
 	}
 
+	get lineNumber(){
+		if(this.originalError && this.filePath){
+			const foundError = RegExp(`${this.escapedFilePath}:(\\d+)`)
+				.exec(this.originalError.stack);
+
+			return foundError && foundError[1];
+		}
+
+		return null;
+	}
+
 	get escapedFilePath(){
 		if(this.filePath){
-
-
 			return this.filePath.replace(/(\/|\.|\-)/g, (char) => '\\' + char);
 		}
 
@@ -19,33 +28,19 @@ class TestError extends Error {
 	}
 
 	displayError() {
-		const text = `${this.name}${this.method ? `.${this.method}()` : '' } Failed Test | ${this.message}`;
+		const html = `<strong>${this.name}${this.method ? `.${this.method}()` : '' } Failed Test:</strong> ${this.message}`;
 
-		const element = $('<div>', { class: 'error errorMessage', text });
+		const element = $('<div>', { class: 'error errorMessage', html });
+		let additionalInfo = null;
 
-		let lineInfo = null;
-
-		if(this.originalError && this.filePath){
-			console.log('Formatted File Path:', this.escapedFilePath);
-			const lineRegEx = new RegExp(`${this.escapedFilePath}:(\\d+)`);
-			console.log('Reg Ex:', lineRegEx);
-			const lineNumber = lineRegEx.exec(this.originalError.stack)[1];
-
-			// // /\/components\/student\.js:(\d+)/
-
-			console.log('Stack Output:', lineNumber);
+		if(this.lineNumber){
+			const text = `Error occurred in ${this.filePath} on line: ${this.lineNumber}`;
+			additionalInfo = $('<div>', { class: 'warning errorMessage', text});
 		}
 
-		$("#errorArea").prepend(element);
+		$("#errorArea").prepend(element, additionalInfo);
 
-		// console.error(this.originalError || this);
-
-
-
-		let stackOutput = {};
-
-		// Error.captureStackTrace(stackOutput, this.originalError);
-		
+		console.error(this.originalError || this);
 	}
 }
 
@@ -60,11 +55,12 @@ class SectionError {
 }
 
 function student_tests(){
+	const fileName = 'components/student.js';
+	const handleStudentError = handleError('Student', fileName);
 	const studentError = new SectionError('Student');
-	const filePath = 'components/student.js';
 
 	try {
-		displayMessage('--Student Records Test', 'header');
+		displayMessage(`--Testing - Student | ${fileName}`, 'header');
 		if(typeof Student === 'undefined'){
 			throw studentError.throw(null, 'Student object does not exist. Check components/student.js and make sure the object is still defined and there are no syntax errors in the console.');
 		}
@@ -85,65 +81,75 @@ function student_tests(){
 		var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
 		var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
 
+		displayMessage(`Student object Exists`, 'message');
 		try{
-			const hasGetData = hasMethod(student, 'getData');
+			const method = 'getData';
+			const hasGetData = hasMethod(student, method);
+
+			displayMessage(`--Testing - Student.${method}() | ${fileName}`, 'header');
+
 			if( hasGetData !== true){
-				throw studentError.throw('getData', hasGetData);
+				throw studentError.throw(method, hasGetData);
 			}
 
 			var result = student.getData();
 			var result2 = student2.getData();
 
-			throw studentError.throw(null, 'This is a test');
 			if(!(result instanceof Object)){
-				throw new Error('getData did not return an standard object like it was supposed to')
+				throw studentError.throw(method, 'Method did not return a standard object like it was supposed to')
 			}
-			if(result.id!==testStudent1.id){
-				throw new Error(`student was created with an id of ${testStudent1.id}, but getData returned an id of ${result.id}`);
+			if(result.id !== testStudent1.id){
+				throw studentError.throw(method, `Student was created with an id of "${testStudent1.id}", but ${method} returned an id of "${result.id}"`);
 			}
-			if(result.name!==testStudent1.name){
-				throw new Error(`student was created with an name of ${testStudent1.name1}, but getData returned a name of ${result.name}`);
+			if(result.name !== testStudent1.name){
+				throw studentError.throw(method, `Student was created with a name of "${testStudent1.name}", but ${method} returned a name of "${result.name}"`);
 			}
-			if(result.course!==testStudent1.course){
-				throw new Error(`student was created with an course of ${testStudent1.course}, but getData returned a course of ${result.course}`);
+			if(result.course !== testStudent1.course){
+				throw studentError.throw(method, `Student was created with a course of "${testStudent1.course}", but ${method} returned a course of "${result.course}"`);
 			}
-			if(result.grade!=testStudent1.grade	){
-				throw new Error(`student was created with an grade of ${testStudent1.grade}, but getData returned a grade of ${result.grade}`);
+			if(result.grade != testStudent1.grade	){
+				throw studentError.throw(method, `Student was created with a grade of "${testStudent1.grade}", but ${method} returned a grade of "${result.grade}"`);
 			}
-			if(typeof result.grade!== 'number'	){
-				throw new Error('student was created with an grade of type number, but getData returned a grade of type ' + typeof result.grade);
+			if(typeof result.grade !== 'number'	){
+				throw studentError.throw(method, `Student was created with a grade of type: "number", but ${method} returned a grade of type: "${typeof result.grade}"`);
 			}
-			if(result2.grade!=testStudent2.grade	){
-				throw new Error(`student was created with an grade of ${testStudent2.grade}, but getData returned a grade of ${result2.grade}`);
+			if(result2.grade != testStudent2.grade	){
+				throw studentError.throw(method, `Student was created with a grade of "${testStudent2.grade}", but ${method} returned a grade of "${result2.grade}"`);
 			}
 			if(typeof result2.grade!== 'number'	){
-				throw new Error(`student was created with an grade of type string but should have been converted to a number.  getData returned a grade of type typeof ${result.grade}.  Either the number was stored in constructor wrong, or returned from getData wrong`);
+				throw studentError.throw(method, `Student was created with a grade of type: "string". Grade should be converted to a number, but ${method} returned a grade of type: "${typeof result2.grade}". The grade should be converted to a number in the constructor when it is saved to the grade property.`);
 			}
-		} catch( error ){
-			
-			handleError(error, 'Student', 'getData', filePath);
 
-			return;
+			displayMessage(`${method} method tests passed`, 'message');
+		} catch( error ){
+			return handleStudentError(error, 'getData');
 		}
-		displayMessage('getData method passed','message');
+		
 		try{
-			var dom = student.render();
-			$("#displayArea").append(dom);
-			if($("#displayArea tr").length!==1){
-				throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
+			const dom = student.render();
+			const method = 'render';
+			const tr = '&lt;tr&gt;';
+			const td = '&lt;td&gt;';
+
+			displayMessage(`--Testing - Student.${method}() | ${fileName}`, 'header');
+			$('#displayArea').append(dom);
+
+			if($('#displayArea tr').length !== 1){
+				throw studentError.throw(method, `Render did not return a table row, html output should have been wrapped in a table row (${tr})`);
 			}
+
 			var selectedChildren = $("#displayArea tr td")
-			if(selectedChildren.length!==4){
-				throw( new Error('render returned tr should have had 4 tds in it.  It only had ' + selectedChildren.length));
+			if(selectedChildren.length !== 4){
+				throw studentError.throw(method, `Render should return a ${tr} that has 4 ${td} children. The returned ${tr} has ${selectedChildren.length} ${td}s`);
 			}
 			if(selectedChildren.eq(0).text()!==testStudent1.name){
-				throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text()}`));
+				throw studentError.throw(method, `Render's first ${td} should have had the student name of "${testStudent1.name}", but it had "${selectedChildren.eq(0).text()}"`);
 			}
 			if(selectedChildren.eq(1).text()!==testStudent1.course){
-				throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text()}`));
+				throw studentError.throw(method, `Render's second ${td} should have had the student course of "${testStudent1.course}", but it had "${selectedChildren.eq(1).text()}"`);
 			}
 			if(selectedChildren.eq(2).text()!=testStudent1.grade){
-				throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text()}`));
+				throw studentError.throw(method, `Render's third ${td} should have had the student grade of "${testStudent1.grade}", but it had "${selectedChildren.eq(2).text()}"`);
 			}
 			var deleteButton = selectedChildren.eq(3).find('button');
 			if(deleteButton.length!==1){
@@ -154,6 +160,8 @@ function student_tests(){
 			}
 
 		} catch( error ){
+			return handleStudentError(error, 'render');
+
 			displayMessage(['error with Student render(): ', error],'error');
 			return;
 		}
@@ -226,27 +234,29 @@ function student_tests(){
 		displayMessage('StudentRecord passed all tests','green');
 		return true;
 	} catch(error) {
-		handleError(error, 'Student', null, filePath);
+		handleStudentError(error);
 	}
 }
 
-function handleError(error, className = null, method = null, filePath = null){
-	if(error instanceof TestError){
-		return error.displayError();
+function handleError(className = null, filePath = null){
+	return function(error, method = null){
+		if (error instanceof TestError) {
+			return error.displayError();
+		}
+
+		const userMessage = 'This is most likely an error caused by your code';
+
+		if (className) {
+			const testError = new TestError(className, method, `${error.message} | ${userMessage}`, error, filePath);
+
+
+			// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
+
+			return testError.displayError();
+		}
+
+		displayMessage([userMessage, error]);
 	}
-
-	const userMessage = 'This is most likely an error caused by your code';
-
-	if(className){
-		const testError = new TestError(className, method, `${error.message} | ${userMessage}`, error, filePath);
-
-		
-		// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
-
-		return testError.displayError();
-	}
-
-	displayMessage([userMessage, error]);
 }
 
 function sgt_tests(){

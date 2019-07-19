@@ -21,7 +21,7 @@ class Student {
 			id: id,
 			name: name,
 			course: course,
-			grade: parseInt(grade)
+			grade: parseFloat(grade)
 		};
 		this.deleteCallback = deleteCallback;
 		this.domElements = {
@@ -46,11 +46,13 @@ class Student {
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		
-		
-		
-		
-		sdfsdf;
+		return {
+			id: this.data.id,
+			name: this.data.name,
+			course: this.data.course,
+			grade: this.data.grade
+		};
+		return this.data;
 	}
 
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
@@ -71,7 +73,16 @@ class Student {
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
+		this.domElements.row = $('<tr>');
+		this.domElements.name = $('<td>').text(this.data.name);
+		this.domElements.course = $('<td>').text(this.data.course);
 
+		return this.domElements.row.append(
+			this.domElements.name,
+			this.domElements.course,
+			$('<td>'),
+			$('<td>')
+		);
 	}
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
