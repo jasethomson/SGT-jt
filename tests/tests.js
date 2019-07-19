@@ -58,25 +58,38 @@ function student_tests(){
 	const fileName = 'components/student.js';
 	const handleStudentError = handleError('Student', fileName);
 	const studentError = new SectionError('Student');
+	const tr = '&lt;tr&gt;';
+	const td = '&lt;td&gt;';
 
 	try {
 		displayMessage(`--Testing - Student | ${fileName}`, 'header');
 		if(typeof Student === 'undefined'){
 			throw studentError.throw(null, 'Student object does not exist. Check components/student.js and make sure the object is still defined and there are no syntax errors in the console.');
 		}
-		var testVal = false;
+
+		let testVal = false;
+		const testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100 };
+		const testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50' };
+		const testStudent3 = { id: 2, name: 'name3', course: 'course3', grade: '60' };
+
 		function testCallback(input){
+			const method = 'handleDelete';
+
 			if(input === undefined){
-				throw new Error('click callback for delete button did not provide an argument of the Student that was clicked.  returned undefined');
+				throw studentError.throw(method, 'Click callback for delete button did not provide an argument of the Student id that was clicked. Click callback parameter is undefined.');
 			}
+
 			if(typeof input !== 'number'){
-				throw( new Error('click callback for delete button did not provide an argument of the Student id (a number) that was clicked.  returned ' + JSON.stringify( input )));
+				throw studentError.throw(method, `Click callback for delete button did not provide an argument of the Student id (a number) that was clicked. Got ${JSON.stringify( input )} as a  type "${typeof input}" instead.`);
 			}
+
+			if(testStudent1.id !== input){
+				throw studentError.throw(method, `Click callback for delete button had a number passed in, but it does not match expected student id. Expected "${testStudent1.id}", but received "${input}" instead.`);
+			}
+
 			testVal = true;
 		}
-		var testStudent1 = { id: 1, name: 'name1', course: 'course1', grade: 100};
-		var testStudent2 = { id: 2, name: 'name2', course: 'course2', grade: '50'};
-		var testStudent3 = { id: 2, name: 'name3', course: 'course3', grade: '60'};
+
 		var student = new Student(testStudent1.id,testStudent1.name,testStudent1.course,testStudent1.grade,testCallback);
 		var student2 = new Student(testStudent2.id,testStudent2.name,testStudent2.course,testStudent2.grade,testCallback);
 		var student3 = new Student(testStudent3.id,testStudent3.name,testStudent3.course,testStudent3.grade,testCallback);
@@ -128,8 +141,6 @@ function student_tests(){
 		try{
 			const dom = student.render();
 			const method = 'render';
-			const tr = '&lt;tr&gt;';
-			const td = '&lt;td&gt;';
 
 			displayMessage(`--Testing - Student.${method}() | ${fileName}`, 'header');
 			$('#displayArea').append(dom);
@@ -153,33 +164,47 @@ function student_tests(){
 			}
 			var deleteButton = selectedChildren.eq(3).find('button');
 			if(deleteButton.length!==1){
-				throw( new Error(`render fourth td should have had a button inside of it, but didn't`));
+				throw studentError.throw(method, `Render's fourth ${td} should have had a button inside of it, but didn't`);
 			}
-			if(deleteButton.text()!=='delete'){
-				throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+			if(deleteButton.text().toLowerCase() !== 'delete'){
+				throw studentError.throw(method, `Render's fourth ${td} should have had a button with the text of "delete", but had "${deleteButton.text()}" instead`);
 			}
 
+			displayMessage(`${method} method tests passed`, 'message');
 		} catch( error ){
 			return handleStudentError(error, 'render');
-
-			displayMessage(['error with Student render(): ', error],'error');
-			return;
 		}
+
 		try{
+			const method = 'handleDelete';
+			const buttonEvents = $._data(deleteButton[0], 'events') || null;
+			displayMessage(`--Testing - Student.${method}() | ${fileName}`, 'header');
+			
+			if(!buttonEvents || !buttonEvents.click){
+				throw studentError.throw('render', `The delete button does not have a click event listener applied to it. This is probably the result of ${method} not being passed to the button's click handler as a callback in the render method.`)
+			}
+			
 			deleteButton.click();
-			if(testVal!==true){
-				throw( new Error(`delete button was called, but didn't properly execute callback function`));
+
+			if(testVal !== true){
+				throw studentError.throw('render', `The delete button was clicked, but didn't properly execute the given callback function. You are most likely not calling this.deleteCallback from inside the ${method} method or you added the wrong callback to the button's click handler.`);
 			}
-			if($("#displayArea > tr").length!==0){
-				throw( new Error(`Student's tr should be removed after delete called, but was not`))
+			if($("#displayArea > tr").length !== 0){
+				throw studentError.throw(method, `Student's ${tr} should be removed after delete button clicked, but it was not.`);
 			}
+
+			displayMessage(`${method} method tests passed`, 'message');
 		} catch( error ){
-			displayMessage(['error with Student handleDelete(): ', error],'error');
-			return;
+			return handleStudentError(error, 'handleDelete');
 		}
 
 		try{
-			var dom = student3.render();
+			const method = 'update';
+			const dom = student3.render();
+			
+			displayMessage(`--Testing - Student.${method}() | ${fileName}`, 'header');
+
+			
 			$("#displayArea").append(dom);
 			if($("#displayArea tr").length!==1){
 				throw( new Error('render did not return a table row, html output should have been wrapped in a table row (tr)'));
@@ -227,6 +252,7 @@ function student_tests(){
 			deleteButton.click();
 
 		} catch( error ){
+			return handleStudentError(error, 'handleDelete');
 			displayMessage(['error with Student update(): ', error],'error');
 			return;
 		}

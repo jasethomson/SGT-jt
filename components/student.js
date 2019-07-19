@@ -76,12 +76,18 @@ class Student {
 		this.domElements.row = $('<tr>');
 		this.domElements.name = $('<td>').text(this.data.name);
 		this.domElements.course = $('<td>').text(this.data.course);
+		this.domElements.grade = $('<td>').text(this.data.grade);
+		this.domElements.deleteButton = $('<button>', {
+			text: 'Delete',
+			click: this.handleDelete
+		});// .on('click', this.handleDelete);
+		this.domElements.operations = $('<td>').append(this.domElements.deleteButton);
 
 		return this.domElements.row.append(
 			this.domElements.name,
 			this.domElements.course,
-			$('<td>'),
-			$('<td>')
+			this.domElements.grade,
+			this.domElements.operations
 		);
 	}
 
@@ -93,7 +99,9 @@ class Student {
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
+		this.deleteCallback(this.data.id);
 
+		this.domElements.row.remove();
 	}
 
 	/* update - change a value in the student record
