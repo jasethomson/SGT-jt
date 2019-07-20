@@ -80,7 +80,7 @@ class Student {
 		this.domElements.deleteButton = $('<button>', {
 			text: 'Delete',
 			click: this.handleDelete
-		});// .on('click', this.handleDelete);
+		});
 		this.domElements.operations = $('<td>').append(this.domElements.deleteButton);
 
 		return this.domElements.row.append(
@@ -118,9 +118,25 @@ class Student {
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update( ){
+	update(field, value){
+		const isAllowed = ['course', 'id', 'grade', 'name'].indexOf(field);
 
+		if(isAllowed >= 0){
+			if(field === 'grade'){
+				value = parseFloat(value);
+			}
 
+			this.data[field] = value;
 
+			// if (field === 'grade'){
+			// 	this.domElements.deleteButton.remove();
+			// }
+
+			this.domElements[field].text(value);
+
+			return true;
+		}
+		
+		return false;
 	}
 }
