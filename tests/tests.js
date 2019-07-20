@@ -335,7 +335,7 @@ function sgt_tests(){
 
 		var testSGT = new SGT_template(elementSelectors);
 
-		displayMessage('SGT_template Object Exists');
+		displayMessage('SGT_template Object Exists', 'message');
 
 		try{
 			const method = 'addEventHandlers';
@@ -348,27 +348,37 @@ function sgt_tests(){
 			}
 
 			testSGT.addEventHandlers();
-			var eventData = $._data( $("#addButton")[0], "events" );
-			for(var i=0; i< eventData.click.length; i++){
-				if( eventData.click[i].handler.name.indexOf('handleAdd') !== -1){
-					break;
+
+			let eventData = $._data( $("#addButton")[0], "events" ) || null;
+			let addIndex = 0;
+
+			if(eventData){
+				for (addIndex; addIndex < eventData.click.length; addIndex++) {
+					if (eventData.click[addIndex].handler.name.indexOf('handleAdd') !== -1) {
+						break;
+					}
 				}
 			}
-			if(i===eventData.click.length){
-				throw( new Error('Could not find handleAdd as a click handler on the add button'));
+			if (addIndex === 0 || addIndex === eventData.click.length){
+				sgtError.throw(method, 'Could not find <code>handleAdd</code> as a click handler on the add button');
 			}
+
 			eventData = $._data( $("#cancelButton")[0], "events" );
-			for(var i=0; i< eventData.click.length; i++){
-				if( eventData.click[i].handler.name.indexOf('handleCancel') !== -1){
-					break;
+			let cancelIndex = 0;
+
+			if(eventData){
+				for (cancelIndex; cancelIndex < eventData.click.length; cancelIndex++) {
+					if (eventData.click[cancelIndex].handler.name.indexOf('handleCancel') !== -1) {
+						break;
+					}
 				}
 			}
-			if(i===eventData.click.length){
-				throw( new Error('Could not find handleCancel as a click handler on the add button'));
+
+			if (cancelIndex === 0 || cancelIndex === eventData.click.length){
+				sgtError.throw(method, 'Could not find <code>handleCancel</code> as a click handler on the cancel button');
 			}
 		} catch( error ){
-			displayMessage(['error with SGT addEventHandlers: ',error],'error');
-			return false;
+			return handleSgtError(error, 'addEventHandlers');
 		}
 		displayMessage('addEventHandlers method passed','message');
 		if(testMethod( testSGT, 'clearInputs')) return

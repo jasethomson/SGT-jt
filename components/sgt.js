@@ -1,7 +1,7 @@
 
 
 
-class SGT_templateasd{
+class SGT_template{
 	/* constructor - sets up SGT object and storage of students
 	params: (object) elementConfig - all pre-made dom elements used by the app
 	purpose: stores the appropriate DOM elements inside of an object
