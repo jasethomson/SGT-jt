@@ -350,48 +350,61 @@ function sgt_tests(){
 			testSGT.addEventHandlers();
 
 			let eventData = $._data( $("#addButton")[0], "events" ) || null;
-			let addIndex = 0;
+			let addIndex = null;
 
 			if(eventData){
-				for (addIndex; addIndex < eventData.click.length; addIndex++) {
+				for (addIndex = 0; addIndex < eventData.click.length; addIndex++) {
 					if (eventData.click[addIndex].handler.name.indexOf('handleAdd') !== -1) {
 						break;
 					}
 				}
 			}
-			if (addIndex === 0 || addIndex === eventData.click.length){
+
+			if (addIndex === null || addIndex === eventData.click.length){
 				sgtError.throw(method, 'Could not find <code>handleAdd</code> as a click handler on the add button');
 			}
 
 			eventData = $._data( $("#cancelButton")[0], "events" );
-			let cancelIndex = 0;
+			let cancelIndex = null;
 
 			if(eventData){
-				for (cancelIndex; cancelIndex < eventData.click.length; cancelIndex++) {
+				for (cancelIndex = 0; cancelIndex < eventData.click.length; cancelIndex++) {
 					if (eventData.click[cancelIndex].handler.name.indexOf('handleCancel') !== -1) {
 						break;
 					}
 				}
 			}
 
-			if (cancelIndex === 0 || cancelIndex === eventData.click.length){
+			if (cancelIndex === null || cancelIndex === eventData.click.length){
 				sgtError.throw(method, 'Could not find <code>handleCancel</code> as a click handler on the cancel button');
 			}
+
+			displayMessage('addEventHandlers method passed', 'message');
 		} catch( error ){
 			return handleSgtError(error, 'addEventHandlers');
 		}
-		displayMessage('addEventHandlers method passed','message');
-		if(testMethod( testSGT, 'clearInputs')) return
-		elementSelectors.nameInput.val('name');
-		elementSelectors.courseInput.val('course');
-		elementSelectors.gradeInput.val('grade');
+		
 		try{
+			const method = 'clearInputs';
+			const hasClearInputs = hasMethod(testSGT, method);
+
+			displayMessage(`--Testing - SGT_template.${method} | ${fileName}`, 'header');
+
+			if (hasClearInputs !== true) {
+				sgtError.throw(method, hasClearInputs);
+			}
+
+			elementSelectors.nameInput.val('name');
+			elementSelectors.courseInput.val('course');
+			elementSelectors.gradeInput.val('grade');
+
 			testSGT.clearInputs();
+
 			if(elementSelectors.nameInput.val()!==''){
-				throw new Error(`called clearInput: name input value should be '', but is ${elementSelectors.nameInput.val()}`)
+				sgtError.throw(method, `Called ${method}: name input value should be <code>''</code>, but is <code>'${elementSelectors.nameInput.val()}'</code>`);
 			}
 			if(elementSelectors.courseInput.val()!==''){
-				throw new Error(`called clearInput: course input value should be '', but is ${elementSelectors.courseInput.val()}`)
+				sgtError.throw(method, `Called ${method}: course input value should be <code>''</code>, but is <code>'${elementSelectors.courseInput.val()}'</code>`);
 			}
 			if(elementSelectors.gradeInput.val()!==''){
 				throw new Error(`called clearInput: grade input value should be '', but is ${elementSelectors.gradeInput.val()}`)
@@ -404,6 +417,7 @@ function sgt_tests(){
 				throw new Error(`cancel button was pressed, but the name, course, and grade inputs were not cleared.  Cancel button should call clearInputs`)
 			}
 		} catch( error ){
+			return handleSgtError(error, 'clearInputs');
 			displayMessage(['error with SGT clearInput: ',error],'error');
 			return false;
 		}

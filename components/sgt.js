@@ -25,7 +25,10 @@ class SGT_template{
 	*/
 
 	addEventHandlers(){
+		console.log('Element Config:', this.elementConfig);
 
+		this.elementConfig.addButton.click(this.handleAdd);
+		this.elementConfig.cancelButton.click(this.handleCancel);
 
 	}
 
@@ -35,7 +38,8 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	clearInputs(){
-
+		this.elementConfig.nameInput.val('');
+		this.elementConfig.courseInput.val('');
 	}
 
 	/* handleCancel - function to handle the cancel button press
