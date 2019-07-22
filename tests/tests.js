@@ -400,128 +400,159 @@ function sgt_tests(){
 
 			testSGT.clearInputs();
 
-			if(elementSelectors.nameInput.val()!==''){
+			if(elementSelectors.nameInput.val() !== ''){
 				sgtError.throw(method, `Called ${method}: name input value should be <code>''</code>, but is <code>'${elementSelectors.nameInput.val()}'</code>`);
 			}
-			if(elementSelectors.courseInput.val()!==''){
+			if(elementSelectors.courseInput.val() !== ''){
 				sgtError.throw(method, `Called ${method}: course input value should be <code>''</code>, but is <code>'${elementSelectors.courseInput.val()}'</code>`);
 			}
-			if(elementSelectors.gradeInput.val()!==''){
-				throw new Error(`called clearInput: grade input value should be '', but is ${elementSelectors.gradeInput.val()}`)
+			if(elementSelectors.gradeInput.val() !== ''){
+				sgtError.throw(method, `Called ${method}: grade input value should be <code>''</code>, but is <code>${elementSelectors.gradeInput.val()}</code>`);
 			}
+
 			elementSelectors.nameInput.val('name');
 			elementSelectors.courseInput.val('course');
 			elementSelectors.gradeInput.val('grade');
 			elementSelectors.cancelButton.click();
-			if(elementSelectors.nameInput.val()!=='' || elementSelectors.courseInput.val()!=='' || elementSelectors.gradeInput.val()!==''){
-				throw new Error(`cancel button was pressed, but the name, course, and grade inputs were not cleared.  Cancel button should call clearInputs`)
+			if(elementSelectors.nameInput.val() !== '' || elementSelectors.courseInput.val() !== '' || elementSelectors.gradeInput.val() !== ''){
+				sgtError.throw('handleCancel', `Cancel button was pressed, but the <code>name</code>, <code>course</code>, and <code>grade</code> inputs were not cleared. Cancel button should call <code>clearInputs</code>`);
 			}
+
+			displayMessage('clearInputs and handleCancel methods passed', 'message');
 		} catch( error ){
 			return handleSgtError(error, 'clearInputs');
-			displayMessage(['error with SGT clearInput: ',error],'error');
-			return false;
 		}
-		displayMessage('SGT clearInputs passed','green');
-		if(testMethod( testSGT, 'createStudent')) return
+		
 		try{
+			const method = 'createStudent';
+			const hasCreateStudent = hasMethod(testSGT, method);
+
+			displayMessage(`--Testing - SGT_template.${method} | ${fileName}`, 'header');
+
+			if (hasCreateStudent !== true) {
+				sgtError.throw(method, hasCreateStudent);
+			}
+
 			var result = testSGT.createStudent('john','math',50,1);
 			if(Array.isArray(testSGT.data)){
-				throw new Error(`data property of SGT_template should be an object, but it was an array`);
+				sgtError.throw(method, `Data property of <code>SGT_template</code> should be an <code>object</code>, but it was an <code>array</code>`);
 			}
 			if(testSGT.data['1'] === undefined){
-				throw new Error(`SGT_template createStudent('john','math',50,1) was called.  Should have made a student with those values and added it to data.  Student not found in data at key 1 `)
+				sgtError.throw(method, `<code>SGT_template</code> <code>createStudent('john','math',50,1)</code> was called.  Should have made a student with those values and added it to data. Student not found in data at key <code>1</code>`);
 			}
 			if(!(testSGT.data['1'] instanceof Student)){
-				throw new Error(`SGT_template createStudent('john','math',50,1) was called. Should have added an object that is an instance of Student, but it was a ${testSGT.data['1'].constructor}`)
+				sgtError.throw(method, `<code>SGT_template</code> <code>createStudent('john','math',50,1)</code> was called. Should have added an object that is an instance of Student, but it was a <code>${testSGT.data['1'].constructor}</code>`);
 			}
-			if(result!==true){
-				throw new Error(`SGT_template createStudent should have returned true for a successful add, but returned ${result}`);
+			if(result !== true){
+				sgtError.throw(method, `<code>SGT_template</code> <code>createStudent</code> should have returned <code>true</code> for a successful add, but returned <code>${result}</code>`);
 			}
+
 			result = testSGT.createStudent('john2','math2',50,1);
-			if(result!==false){
-				throw new Error(`SGT_template createStudent should have returned false for trying to add a student with the same ID as an existing student, but returned ${result}`);
+			if(result !== false){
+				sgtError.throw(method, `<code>SGT_template</code> <code>createStudent</code> should have returned <code>false</code> for trying to add a student with the same ID as an existing student, but returned <code>${result}</code>`);
 			}
 			var items = Object.values(testSGT.data);
-			if(items.length!==1){
-				throw new Error(`SGT_template data should have had 1 item in it after successfully adding 1 student and failing to add the same student again, but had ${items.length}`)
+			if(items.length !== 1){
+				sgtError.throw(method, `<code>SGT_template</code> data should have had <code>1</code> item in it after successfully adding 1 student and failing to add the same student again, but had <code>${items.length}</code>`);
 			}
+			
 			result = testSGT.createStudent('student3','math',50,3);
 			items = Object.values(testSGT.data);
-			if(items.length!==2){
-				throw new Error(`SGT_template was given another student (createStudent('student3','math',50,3)), should now have 2, but had ${items.length}`)
+			if(items.length !== 2){
+				sgtError.throw(method, `<code>SGT_template</code> was given another student <code>createStudent('student3','math',50,3)</code>, should now have <code>2</code>, but had ${items.length}`)
 			}
+
 			result = testSGT.createStudent('student4','math',50);
 			items = Object.values(testSGT.data);
-			if(items.length!==3){
-				throw new Error(`SGT_template was given another student, but with no id. (createStudent('student4','math',50)), should now have 3 items, but had ${items.length}`)
+			if(items.length !== 3){
+				sgtError.throw(method, `<code>SGT_template</code> was given another student, but with no <code>id</code>. <code>createStudent('student4','math',50)</code>, should now have <code>3</code> items, but had <code>${items.length}</code>`);
 			}
+
 			result = testSGT.createStudent('student5','math',50);
 			items = Object.values(testSGT.data);
-			if(items.length!==4){
-				throw new Error(`SGT_template was given another student, again with no id. (createStudent('student5','math',50)), should now have 4 items, but had ${items.length}`)
+			if(items.length !== 4){
+				sgtError.throw(method, `<code>SGT_template</code> was given another student, again with no <code>id</code>. <code>createStudent('student5','math',50)</code>, should now have <code>4</code> items, but had <code>${items.length}</code>`);
 			}
-			if(testSGT.data['4']===undefined){
-				throw new Error(`SGT_template was given another student with no id, but the next id slot was taken by a previous entry.  It should have added this student at the next available ID of 4, but did not`)
+			if(testSGT.data['4'] === undefined){
+				sgtError.throw(method, `<code>SGT_template</code> was given another student with no id, but the next id slot was taken by a previous entry. It should have added this student at the next available ID of <code>4</code>, but did not`);
 			}
-			if(testSGT.data['4'].getData().name!=='student5'){
-				throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a name of student5, but had ${testSGT.data['4'].getData().name}`)
+			if(testSGT.data['4'].getData().name !== 'student5'){
+				sgtError.throw(method, `<code>SGT_template</code> student was added with the following: <code>createStudent('student5','math',50)</code>. Should have had a name of <code>student5</code>, but had <code>${testSGT.data['4'].getData().name}</code>`);
 			}
 			if(testSGT.data['4'].getData().course!=='math'){
-				throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a course of math, but had ${testSGT.data['4'].getData().course}`)
+				sgtError.throw(method, `<code>SGT_template</code> student was added with the following: <code>createStudent('student5','math',50)</code>. Should have had a course of math, but had <code>${testSGT.data['4'].getData().course}</code>`);
 			}
 			if(typeof testSGT.data['4'].getData().grade !== 'number'){
-				throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of type ${typeof testSGT.data['4'].getData().grade}`)
+				sgtError.throw(method, `<code>SGT_template</code> student was added with the following: <code>createStudent('student5','math',50)</code>. Should have had a grade of type <code>${typeof testSGT.data['4'].getData().grade}</code>`);
 			}
 			if(testSGT.data['4'].getData().grade !== 50){
-				throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of number 50, but had ${testSGT.data['4'].getData().grade}`)
+				sgtError.throw(method, `<code>SGT_template</code student was added with the following: <code>createStudent('student5','math',50)</code>. Should have had a grade of number <code>50</code>, but had <code>${testSGT.data['4'].getData().grade}</code>`);
 			}
+
 			elementSelectors.nameInput.val('name');
 			elementSelectors.courseInput.val('course');
 			elementSelectors.gradeInput.val(100);
 			elementSelectors.addButton.click();
 			items = Object.values(testSGT.data);
-			var studentData = testSGT.data[5].getData();
-			console.log(studentData);
+			const method2 = 'handleAdd';
+			
 			var dom = $("#displayArea > tr:nth-of-type(5)");
-			if(items.length!==5){
-				throw new Error(`SGT_template createStudent should have been triggered by button 'add' being clicked.  Either function wasn't triggered, or createStudent didn't get proper data from inputs`)
+			if(items.length !== 5){
+				sgtError.throw(method2, `<code>SGT_template</code> <code>createStudent</code> should have been triggered by button <code>add</code> being clicked. Either function wasn't triggered, or <code>createStudent</code> didn't get proper data from inputs`);
 			}
-			if(studentData.name!=='name'){
-				throw new Error(`Name input had 'name' in it when add was clicked, but created Student has a name of ${studentData.name}`)
+
+			var studentData = testSGT.data[5].getData();
+			
+			if(studentData.name !== 'name'){
+				sgtError.throw(method2, `Name input had <code>'name'</code> in it when add was clicked, but created Student has a name of <code>${studentData.name}</code>`);
 			}
 			if(studentData.course!=='course'){
-				throw new Error(`Course input had 'course' in it when add was clicked, but created Studenthas a course of ${studentData.course}`)
+				sgtError.throw(method2, `Course input had <code>'course'</code> in it when add was clicked, but created Student has a course of <code>${studentData.course}</code>`);
 			}
-			if(studentData.grade!==100){
-				throw new Error(`Grade input had 100 in it when add was clicked, but created Student has a grade of ${studentData.grade}`)
+			if(studentData.grade !== 100){
+				sgtError.throw(method2, `Grade input had <code>100</code> in it when add was clicked, but created Student has a grade of <code>${studentData.grade}</code>`);
 			}
 
+			displayMessage('createStudent method passed','message');
 		} catch( error ){
-			displayMessage(['error with SGT handleAdd: ',error],'error');
-			return false;
+			return handleSgtError(error, 'createStudent');
 		}
-		displayMessage('SGT createStudent passed','green');
-
-
-
-		if(testMethod( testSGT, 'doesStudentExist')) return
+		
 		try{
-			if(testSGT.doesStudentExist(3)!==true){
-				throw new Error(`Student id 3 should exist, but doesStudentExist returned false`);
+			const method = 'doesStudentExist';
+			const hasDoesStudentExist = hasMethod(testSGT, method);
+
+			displayMessage(`--Testing - SGT_template.${method} | ${fileName}`, 'header');
+
+			if (hasDoesStudentExist !== true) {
+				sgtError.throw(method, hasDoesStudentExist);
+			}
+
+			const student3Exists = testSGT.doesStudentExist(3);
+			if(student3Exists !== true){
+				sgtError.throw(method, `Student id <code>3</code> should exist, but <code>doesStudentExist</code> returned <code>${student3Exists}</code>`);
 			}
 			if(testSGT.doesStudentExist(40)!==false){
 				throw new Error(`Student id 40 was checked.  Should not exist, but doesStudentExist returned`);
 			}
 			//still need to test if there is 0 students... guess I could test that when I delete all students
 
+			displayMessage('doesStudentExist method passed','message');
 		} catch( error ){
-			displayMessage(['error with SGT doesStudentExist: ',error],'error');
-			return false;
+			return handleSgtError(error, 'doesStudentExist');
 		}
-		displayMessage('SGT doesStudentExist passed','green');
 
 		if(testMethod( testSGT, 'readStudent')) return
 		try{
+			const method = 'readStudent';
+			const hasReadStudent = hasMethod(testSGT, method);
+
+			displayMessage(`--Testing - SGT_template.${method} | ${fileName}`, 'header');
+
+			if (hasReadStudent !== true) {
+				sgtError.throw(method, hasReadStudent);
+			}
+
 			var pulledStudent = testSGT.readStudent(3);
 			if(pulledStudent.constructor!==Student){
 				throw new Error(`readStudent(3) should have returned a Student object, but returned a ${pulledStudent.constructor}`);

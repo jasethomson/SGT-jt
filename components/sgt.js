@@ -15,6 +15,8 @@ class SGT_template{
 		this.data = {};
 
 
+		this.handleCancel = this.handleCancel.bind(this);
+		this.handleAdd = this.handleAdd.bind(this);
 	}
 	/* addEventHandlers - add event handlers to premade dom elements
 	make sure to use the element references that were passed into the constructor (see elementConfig)
@@ -40,6 +42,7 @@ class SGT_template{
 	clearInputs(){
 		this.elementConfig.nameInput.val('');
 		this.elementConfig.courseInput.val('');
+		this.elementConfig.gradeInput.val('');
 	}
 
 	/* handleCancel - function to handle the cancel button press
@@ -48,7 +51,7 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleCancel(){
-
+		this.clearInputs();
 	}
 
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
@@ -73,8 +76,29 @@ class SGT_template{
 	return: false if unsuccessful in adding student, true if successful
 	ESTIMATED TIME: 1.5 hours
 	*/
-	createStudent(){
+	createStudent(name, course, grade, id){
+		console.log('Called With:', name, course, grade, id);
+		if(id && this.doesStudentExist(id)){
+			return false;
+		}
 
+		if(!id){
+			const ids = Object.keys(this.data);
+			
+			ids.forEach((i, index, ids) => {
+				const currentId = index + 1;
+				if(i !== currentId && !this.data[currentId]){
+					id = currentId;
+				}
+			});
+
+			if(!id) id = ids.length + 1;
+		}
+
+		console.log('ID:', id);
+
+		this.data[id] = new Student(id, name, course, grade);
+		return true;
 	}
 
 	/* doesStudentExist -
@@ -86,8 +110,11 @@ class SGT_template{
 	return: false if id is undefined or that student doesn't exist, true if the student does exist
 	ESTIMATED TIME: 15 minutes
 	*/
-	doesStudentExist(){
-
+	doesStudentExist(id){
+		if(this.data[id]){
+			return true;
+		}
+		return false;
 	}
 
 	/* handleAdd - function to handle the add button click
@@ -100,7 +127,11 @@ class SGT_template{
 	ESTIMATED TIME: 1 hour
 	*/
 	handleAdd(){
+		const name = this.elementConfig.nameInput.val();
+		const course = this.elementConfig.courseInput.val();
+		const grade = this.elementConfig.gradeInput.val();
 
+		this.createStudent(name, course, grade);
 	}
 
 	/* readStudent -

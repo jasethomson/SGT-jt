@@ -46,12 +46,6 @@ class Student {
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		return {
-			id: this.data.id,
-			name: this.data.name,
-			course: this.data.course,
-			grade: this.data.grade
-		};
 		return this.data;
 	}
 
