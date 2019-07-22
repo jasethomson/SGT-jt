@@ -60,7 +60,7 @@
 	height: 40%;
 	width: 50%;
 	transform: translateX(-50%);
-	border: 1px solid black;
+	border: 2px solid black;
 }
 
 .minimizeButton{
@@ -73,9 +73,11 @@
 	top: 0;
 	right: 0;
 }
+
 body>.minimizeButton{
 	right: 0;
 }
+
 .modalContainer > .minimizeButton{
 	top: auto;
 	bottom: 100%;
