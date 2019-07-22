@@ -676,7 +676,6 @@ function sgt_tests(){
 			return handleSgtError(error, 'displayAverage');
 		}
 
-		if(testMethod( testSGT, 'deleteStudent')) return
 		try{
 			const method = 'deleteStudent';
 			const hasDeleteStudent = hasMethod(testSGT, method);
