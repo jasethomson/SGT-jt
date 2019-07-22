@@ -1,7 +1,4 @@
-
-
-
-class SGT_template{
+class SGT_template {
 	/* constructor - sets up SGT object and storage of students
 	params: (object) elementConfig - all pre-made dom elements used by the app
 	purpose:
@@ -11,12 +8,13 @@ class SGT_template{
 		- Finally, binds methods that need to be bound
 	return: undefined
 	*/
-	constructor( elementConfig ){
+	constructor(elementConfig) {
 		this.elementConfig = elementConfig; /* console.log elementConfig to note what data you have access to */
 		this.data = {};
 
 
 	}
+
 	/* addEventHandlers - add event handlers to pre-made dom elements
 	make sure to use the element references that were passed into the constructor (see elementConfig)
 	purpose:
@@ -25,8 +23,7 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
-
-	addEventHandlers(){
+	addEventHandlers() {
 
 
 	}
@@ -36,7 +33,7 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
-	clearInputs(){
+	clearInputs() {
 
 	}
 
@@ -45,12 +42,11 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
-	handleCancel(){
+	handleCancel() {
 
 	}
 
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
-
 		name : the student's name
 		course : the student's course
 		grade: the student's grade
@@ -71,7 +67,7 @@ class SGT_template{
 	return: false if unsuccessful in adding student, true if successful
 	ESTIMATED TIME: 1.5 hours
 	*/
-	createStudent(){
+	createStudent() {
 
 	}
 
@@ -84,7 +80,7 @@ class SGT_template{
 	return: false if id is undefined or that student doesn't exist, true if the student does exist
 	ESTIMATED TIME: 15 minutes
 	*/
-	doesStudentExist(){
+	doesStudentExist() {
 
 	}
 
@@ -98,7 +94,7 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 1 hour
 	*/
-	handleAdd(){
+	handleAdd() {
 
 	}
 
@@ -114,7 +110,7 @@ class SGT_template{
 		a singular Student object if an ID was given, an array of Student objects if no ID was given
 		ESTIMATED TIME: 45 minutes
 	*/
-	readStudent(){
+	readStudent() {
 
 	}
 
@@ -130,7 +126,7 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 1.5 hours
 	*/
-	displayAllStudents(){
+	displayAllStudents() {
 
 	}
 
@@ -143,7 +139,7 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 
-	displayAverage(){
+	displayAverage() {
 
 	}
 
@@ -160,7 +156,7 @@ class SGT_template{
 		true if it was successful, false if not
 		ESTIMATED TIME: 30 minutes
 	*/
-	deleteStudent(){
+	deleteStudent() {
 
 	}
 
@@ -180,9 +176,7 @@ class SGT_template{
 		true if it updated, false if it did not
 		ESTIMATED TIME: no needed for first versions: 30 minutes
 	*/
-	updateStudent(){
+	updateStudent() {
 
 	}
-
-
 }

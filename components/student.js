@@ -1,6 +1,4 @@
-
-
-class Student{
+class Student {
 	/* constructor - take in params for the student and save them,
 		create storage for student dom elements
 		store the deletion callback from the SGT_template class
@@ -15,7 +13,7 @@ class Student{
 	return: undefined (don't return undefined, it will screw it up a constructor, ***don't put a return***)
 	ESTIMATED TIME: 30 minutes to understand
 	*/
-	constructor(id, name, course, grade, deleteCallback=()=>{}){
+	constructor(id, name, course, grade, deleteCallback = () => { }) {
 		//this method has been built out to help you understand the general structure better
 		this.data = {
 			id: id,
@@ -32,7 +30,7 @@ class Student{
 			operations: null,
 			deleteButton: null
 		};
-		this.handleDelete = this.handleDelete.bind( this );
+		this.handleDelete = this.handleDelete.bind(this);
 		this.render = this.render.bind(this);
 	}
 
@@ -45,7 +43,7 @@ class Student{
 		(number): grade
 	ESTIMATED TIME: 30 minutes
 	*/
-	getData(){
+	getData() {
 
 	}
 
@@ -66,7 +64,7 @@ class Student{
 	return: (jquery dom element) the row that contains the student dom elements
 	ESTIMATED TIME: 2 hours
 	*/
-	render(){
+	render() {
 
 	}
 
@@ -77,7 +75,7 @@ class Student{
 		reference you stored in this.domElements)
 	ESTIMATED TIME: 15 minutes
 	*/
-	handleDelete(){
+	handleDelete() {
 
 	}
 
@@ -97,9 +95,7 @@ class Student{
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update( ){
-
-
+	update() {
 
 	}
 }
