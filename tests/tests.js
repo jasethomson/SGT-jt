@@ -758,6 +758,7 @@ function handleError(className = null, filePath = null) {
 
 function startTests(){
 	$(".errorMessage").remove();
+	$('#displayArea').html('');
 	var testFunctions = ['student_tests', 'sgt_tests'];
 	var i = 0;
 	while( i<testFunctions.length){
