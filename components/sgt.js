@@ -11,9 +11,14 @@ class SGT_template {
 	constructor(elementConfig) {
 		this.elementConfig = elementConfig; /* console.log elementConfig to note what data you have access to */
 		this.data = {};
+		this.newStudent = null;
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
 		this.deleteStudent = this.deleteStudent.bind(this);
+		this.retrieveStudent = this.retrieveStudent.bind(this);
+		this.createStudent = this.createStudent.bind(this);
+		this.successMethod = this.successMethod.bind(this);
+		this.createArrayOfThisData = this.createArrayOfThisData.bind(this);
 	}
 
 	/* addEventHandlers - add event handlers to pre-made dom elements
@@ -29,6 +34,8 @@ class SGT_template {
 		// $(this.elementConfig).on('click', this.handleCancel);
 		$(this.elementConfig.addButton).on('click', this.handleAdd);
 		$(this.elementConfig.cancelButton).on('click', this.handleCancel);
+		$("#retrieveButton").on("click", this.retrieveStudent);
+
 
 	}
 
@@ -77,6 +84,7 @@ class SGT_template {
 	ESTIMATED TIME: 1.5 hours
 	*/
 	createStudent(name, course, grade, id) {
+		// debugger;
 		if(id === undefined){
 			var newId = 1;
 			while (this.doesStudentExist(newId)) {
@@ -87,8 +95,9 @@ class SGT_template {
 		if(this.doesStudentExist(id)){
 			return false;
 		}
-		var newStudent = new Student(id, name, course, grade, this.deleteStudent);
-		this.data[id] = newStudent;
+		this.newStudent = new Student(id, name, course, grade, this.deleteStudent);
+		this.data[id] = this.newStudent;
+		// console.log("this.newStudent", this.newStudent);
 		return true;
 	}
 	/* doesStudentExist -
@@ -222,7 +231,7 @@ class SGT_template {
 		ESTIMATED TIME: 30 minutes
 	*/
 	deleteStudent(id) {
-		console.log("this hello!",this);
+		// console.log("this hello!",this);
 		if (this.doesStudentExist(id)){
 			// console.log("this.data[1]", this.data[40]);
 			delete this.data[id];
@@ -250,5 +259,60 @@ class SGT_template {
 	*/
 	updateStudent() {
 
+	}
+	retrieveStudent() {
+		this.result = null;
+		var ajaxConfigObject = {
+			dataType: 'json',
+			url: 'http://s-apis.learningfuze.com/sgt/get',
+			method: 'post',
+			data: {
+				api_key: 'DAvufnDwqE'
+			},
+			success: this.successMethod,
+			error: function(){
+				console.log("better luck next time, try again");
+			}
+		};
+		$.ajax(ajaxConfigObject);
+	}
+	successMethod(result){
+
+
+			console.log("we did it!!!");
+			this.result = result;
+			console.log("result: ", this.result.data.length);
+			var accessCounter = 0;
+			var accessData = this.result.data[accessCounter];
+			var dataLength = this.result.data.length;
+
+			// console.log("this.data preloop", this.data);
+			var thisDataArray = this.createArrayOfThisData();
+			var whileCounter = 1;
+			while(whileCounter <= thisDataArray.length + 1){
+				this.deleteStudent(whileCounter);
+				whileCounter++;
+			}
+			// console.log("this.data post loop",this.data);
+			while(accessCounter < dataLength){
+				// debugger;
+				this.createStudent(accessData.name, accessData.course, accessData.grade, accessData.id);
+				// console.log("this.newStudent", this.newStudent);
+				this.displayAllStudents();
+				accessCounter++;
+				accessData = this.result.data[accessCounter];
+			}
+
+
+
+
+	}
+	createArrayOfThisData(){
+		var arrayCounter = 1;
+		var arrayOfObjects = [];
+		for (arrayCounter in this.data) {
+			arrayOfObjects.push(this.data[arrayCounter]);
+		}
+		return arrayOfObjects;
 	}
 }
