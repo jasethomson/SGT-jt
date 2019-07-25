@@ -72,7 +72,6 @@ class Student {
 		this.domElements.name = studentName;
 		studentRow.append(studentName);
 
-
 		var studentCourse = $("<td>");
 		studentCourse.text(this.data.course);
 		this.domElements.course = studentCourse;
@@ -83,11 +82,9 @@ class Student {
 		this.domElements.grade = studentGrade;
 		studentRow.append(studentGrade);
 
-
 		var studentOperations = $("<td>");
 		studentRow.append(studentOperations);
 		this.domElements.operations = studentOperations;
-
 
 		var deleteButton = $("<button>");
 		deleteButton.text("Delete");
