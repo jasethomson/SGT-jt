@@ -18,7 +18,8 @@ class SGT_template {
 		this.retrieveStudent = this.retrieveStudent.bind(this);
 		this.createStudent = this.createStudent.bind(this);
 		this.successMethod = this.successMethod.bind(this);
-		this.createArrayOfThisData = this.createArrayOfThisData.bind(this);
+		this.addStudentToServer = this.addStudentToServer.bind(this);
+
 	}
 
 	/* addEventHandlers - add event handlers to pre-made dom elements
@@ -131,6 +132,7 @@ class SGT_template {
 		var tempGrade = parseFloat(this.elementConfig.gradeInput.val());
 		this.createStudent(tempName, tempCourse, tempGrade);
 		this.clearInputs();
+		this.addStudentToServer(tempName,tempCourse,tempGrade);
 	}
 
 	/* readStudent -
@@ -182,15 +184,9 @@ class SGT_template {
 		var arrayOfObjects = [];
 		for (arrayCounter in this.data) {
 			arrayOfObjects.push(this.data[arrayCounter]);
-		}
-
-		var counterForStudents = 1;
-		while (counterForStudents <= arrayOfObjects.length){
-			$("#displayArea").append(this.data[counterForStudents].render());
-			counterForStudents++;
+			$("#displayArea").append(this.data[arrayCounter].render());
 		}
 		this.displayAverage();
-
 	}
 
 	/* displayAverage - get the grade average and display it
@@ -208,14 +204,15 @@ class SGT_template {
 		for (arrayCounter in this.data) {
 			arrayOfObjects.push(this.data[arrayCounter]);
 		}
-		var counterForStudents = 1;
+				var counterForStudents = 1;
 		var sumOfGrades = null;
 		while(counterForStudents <= arrayOfObjects.length){
-			sumOfGrades += parseFloat(this.data[counterForStudents].data['grade']);
+			sumOfGrades += parseFloat(this.data[arrayCounter].data['grade']);
 			counterForStudents++;
 		}
 		var average = (sumOfGrades/arrayOfObjects.length).toFixed(2);
 		$(".avgGrade").text(average);
+
 	}
 	/* deleteStudent -
 		delete the given student at the given id
@@ -277,42 +274,38 @@ class SGT_template {
 		$.ajax(ajaxConfigObject);
 	}
 	successMethod(result){
-
-
 			console.log("we did it!!!");
 			this.result = result;
-			console.log("result: ", this.result.data.length);
 			var accessCounter = 0;
 			var accessData = this.result.data[accessCounter];
-			var dataLength = this.result.data.length;
-
-			// console.log("this.data preloop", this.data);
-			var thisDataArray = this.createArrayOfThisData();
-			var whileCounter = 1;
-			while(whileCounter <= thisDataArray.length + 1){
-				this.deleteStudent(whileCounter);
-				whileCounter++;
-			}
-			// console.log("this.data post loop",this.data);
+			var dataLength = (this.result.data.length);
+		console.log("accessData", this.result.data);
 			while(accessCounter < dataLength){
-				// debugger;
 				this.createStudent(accessData.name, accessData.course, accessData.grade, accessData.id);
-				// console.log("this.newStudent", this.newStudent);
 				this.displayAllStudents();
 				accessCounter++;
 				accessData = this.result.data[accessCounter];
 			}
-
-
-
-
 	}
-	createArrayOfThisData(){
-		var arrayCounter = 1;
-		var arrayOfObjects = [];
-		for (arrayCounter in this.data) {
-			arrayOfObjects.push(this.data[arrayCounter]);
+	addStudentToServer(studentName, studentCourse, studentGrade){
+		this.result2 = null;
+		var ajaxConfigObject = {
+			dataType: 'json',
+			url: 'http://s-apis.learningfuze.com/sgt/level',
+			method: 'post',
+			data: {
+				api_key: 'DAvufnDwqE',
+				name: studentName,
+				course: studentCourse,
+				grade: studentGrade
+			},
+			success: function(student){
+				console.log("addStudentWorks", student);
+			},
+			error: function(){
+				console.log("addStudentFails");
+			},
 		}
-		return arrayOfObjects;
+		$.ajax(ajaxConfigObject);
 	}
 }
