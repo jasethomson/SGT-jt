@@ -14,14 +14,43 @@ class SGT_template {
 		this.newStudent = null;
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
-		this.deleteStudent = this.deleteStudent.bind(this);
+		this.deleteStudentFromServer = this.deleteStudentFromServer.bind(this);
 		this.retrieveStudent = this.retrieveStudent.bind(this);
 		this.createStudent = this.createStudent.bind(this);
 		this.successMethod = this.successMethod.bind(this);
 		this.addStudentToServer = this.addStudentToServer.bind(this);
-
+		this.deleteStudent = this.deleteStudent.bind(this);
+		this.pi = "3.14159265";
+		this.counterDigit = 0;
 	}
-
+	setPiValue() {
+		// debugger;
+		var piDigit = this.pi[this.counterDigit];
+		this.counterDigit++;
+		return piDigit;
+}
+	sendDigit() {
+			$.ajax({
+			dataType: 'json',
+			url: "http://s-apis.learningfuze.com/sgt/singasongofsixpence",
+			method: 'post',
+			data: {
+				api_key: 'DAvufnDwqE',
+				num: this.setPiValue()
+			},
+			success: function(response){
+				console.log(response);
+				if (this.counterDigit === 10) {
+					this.counterDigit = 0;
+					return;
+				}
+				this.sendDigit();
+			}.bind(this),
+				error: function(student) {
+					console.log("addStudentFails");
+				},
+		});
+	}
 	/* addEventHandlers - add event handlers to pre-made dom elements
 	make sure to use the element references that were passed into the constructor (see elementConfig)
 	purpose:
@@ -33,13 +62,10 @@ class SGT_template {
 	addEventHandlers() {
 		console.log(this.elementConfig);
 		// $(this.elementConfig).on('click', this.handleCancel);
-		$(this.elementConfig.addButton).on('click', this.handleAdd);
-		$(this.elementConfig.cancelButton).on('click', this.handleCancel);
+		this.elementConfig.addButton.on('click', this.handleAdd);
+		this.elementConfig.cancelButton.on('click', this.handleCancel);
 		$("#retrieveButton").on("click", this.retrieveStudent);
-
-
 	}
-
 	/* clearInputs - Clear the values in the three form inputs
 	params: none
 	return: undefined
@@ -49,9 +75,6 @@ class SGT_template {
 		this.elementConfig.nameInput.val("");
 		this.elementConfig.courseInput.val("");
 		this.elementConfig.gradeInput.val("");
-		// this.elementConfig.nameInput.text("").val("");
-		// this.elementConfig.courseInput.text("").val("");
-		// this.elementConfig.gradeInput.text("").val("");
 	}
 
 	/* handleCancel - function to handle the cancel button press (should clear out all values in the inputs)
@@ -96,9 +119,8 @@ class SGT_template {
 		if(this.doesStudentExist(id)){
 			return false;
 		}
-		this.newStudent = new Student(id, name, course, grade, this.deleteStudent);
+		this.newStudent = new Student(id, name, course, grade, this.deleteStudentFromServer);
 		this.data[id] = this.newStudent;
-		// console.log("this.newStudent", this.newStudent);
 		return true;
 	}
 	/* doesStudentExist -
@@ -149,22 +171,45 @@ class SGT_template {
 	*/
 	readStudent(id) {
 		// for (studentCounterForArray in this.data){
-		// 	console.log("studentObject: ", this.data);
-		// }
+	// 	// 	console.log("studentObject: ", this.data);
+	// 	// }
+	// 	if(id === undefined){
+	// 		var studentCounterForArray = 1;
+	// 		this.newStudentObjectArray = [];
+	// 		for (studentCounterForArray in this.data) {
+	// 			this.newStudentObjectArray.push(this.data[studentCounterForArray]);
+	// 		}
+	// 		return this.newStudentObjectArray;
+	// 	}
+	// 	if (this.doesStudentExist(id)){
+	// 			return this.data[id];
+	// 	} else {
+	// 			return false;
+	// 	}
+	// }
 		if(id === undefined){
-			var studentCounterForArray = 1;
-			this.newStudentObjectArray = [];
-			for (studentCounterForArray in this.data) {
-				this.newStudentObjectArray.push(this.data[studentCounterForArray]);
-			}
-			return this.newStudentObjectArray;
-		}
-		if (this.doesStudentExist(id)){
+			if(this.data[id]){
 				return this.data[id];
-		} else {
+			}
+			else {
 				return false;
+			}
+		} else {
+			return Object.values(this.data);
 		}
+
 	}
+
+
+
+
+
+
+
+
+
+
+
 	/* displayAllStudents - iterate through all students in the this.data object
 	purpose:
 		- grab all students from this.data,
@@ -178,13 +223,20 @@ class SGT_template {
 	ESTIMATED TIME: 1.5 hours
 	*/
 	displayAllStudents() {
-		$("#displayArea").empty();
 
-		var arrayCounter = 1;
-		var arrayOfObjects = [];
-		for (arrayCounter in this.data) {
-			arrayOfObjects.push(this.data[arrayCounter]);
-			$("#displayArea").append(this.data[arrayCounter].render());
+	// 	$("#displayArea").empty();
+	// 	debugger;
+	// 	var arrayCounter = 1;
+	// 	var arrayOfObjects = [];
+	// 	for (arrayCounter in this.data) {
+	// 		arrayOfObjects.push(this.data[arrayCounter]);
+	// 		$("#displayArea").append(this.data[arrayCounter].render());
+	// 	}
+	// 	this.displayAverage();
+		// debugger;
+		$("#displayArea").empty();
+		for (var key in this.data) {
+			$("#displayArea").append(this.data[key].render());
 		}
 		this.displayAverage();
 	}
@@ -204,7 +256,7 @@ class SGT_template {
 		for (arrayCounter in this.data) {
 			arrayOfObjects.push(this.data[arrayCounter]);
 		}
-				var counterForStudents = 1;
+		var counterForStudents = 1;
 		var sumOfGrades = null;
 		while(counterForStudents <= arrayOfObjects.length){
 			sumOfGrades += parseFloat(this.data[arrayCounter].data['grade']);
@@ -230,14 +282,47 @@ class SGT_template {
 	deleteStudent(id) {
 		// console.log("this hello!",this);
 		if (this.doesStudentExist(id)){
-			// console.log("this.data[1]", this.data[40]);
-			delete this.data[id];
+
+			// delete this.data[id];
+			delete this.createStudent();
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	deleteStudentFromServer(id) {
+		// this.deleteID = id;
+		debugger;
+		var ajaxDeleteConfig = {
+			dataType: 'json',
+			url: 'http://s-apis.learningfuze.com/sgt/delete',
+			method: 'post',
+			data: {
+				api_key: 'DAvufnDwqE',
+				student_id: id
+			},
+			success: function(result){
+				console.log("delete works!");
+				if (result) {
+					this.deleteStudent(id);
+					// this.retrieveStudent();
+					return true;
+				} else {
+					return false;
+				}
+			}.bind(this),
+			error: function(){
+				console.log("fix your delete");
+			}
+		}
+		$.ajax(ajaxDeleteConfig);
+		// if (this.doesStudentExist(id)){
+		// 	delete this.data[id];
+		// 	return true;
+		// } else {
+		// 	return false;
+		// }
+	}
 	/* updateStudent -
 		*** not used for now.  Will be used later ***
 		pass in an ID, a field to change, and a value to change the field to
@@ -258,6 +343,7 @@ class SGT_template {
 
 	}
 	retrieveStudent() {
+
 		this.result = null;
 		var ajaxConfigObject = {
 			dataType: 'json',
@@ -282,30 +368,53 @@ class SGT_template {
 		console.log("accessData", this.result.data);
 			while(accessCounter < dataLength){
 				this.createStudent(accessData.name, accessData.course, accessData.grade, accessData.id);
-				this.displayAllStudents();
 				accessCounter++;
 				accessData = this.result.data[accessCounter];
 			}
+		this.displayAllStudents();
 	}
+
 	addStudentToServer(studentName, studentCourse, studentGrade){
-		this.result2 = null;
-		var ajaxConfigObject = {
-			dataType: 'json',
-			url: 'http://s-apis.learningfuze.com/sgt/level',
-			method: 'post',
-			data: {
-				api_key: 'DAvufnDwqE',
-				name: studentName,
-				course: studentCourse,
-				grade: studentGrade
-			},
-			success: function(student){
-				console.log("addStudentWorks", student);
-			},
-			error: function(){
-				console.log("addStudentFails");
-			},
-		}
-		$.ajax(ajaxConfigObject);
+			var ajaxConfigObject = {
+				dataType: 'json',
+				url: "http://s-apis.learningfuze.com/sgt/create",
+				method: 'post',
+				data: {
+					api_key: 'DAvufnDwqE',
+					name: studentName,
+					course: studentCourse,
+					grade: studentGrade
+				},
+				success: function (student) {
+					console.log("student", student);
+				},
+				error: function (error) {
+					console.log("error", error );
+
+				},
+			}
+			$.ajax(ajaxConfigObject);
 	}
+
+
+
 }
+//? ~= 4 and 20 blackbirds
+//sgt/singasong ??????????
+//? ~= baked in a
+//ratio of diameter to circumference
+//"data: num(string)"
+//"same server"
+//"every digit, one by one"
+//ratio of diameter to circumference
+//if you fail, you start over
+// //"mmmmm, pi"
+
+
+
+
+// http://s-apis.learningfuze.com/sgt/singasongofsixpence
+// var string = "ofsixpence";
+// for(var counter = 0; counter < 10; counter++){
+// 	var link = "http://s-apis.learningfuze.com/sgt/singasong" + string[counter];
+// }
