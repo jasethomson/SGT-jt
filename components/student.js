@@ -44,7 +44,7 @@ class Student {
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData() {
-
+		return this.data;
 	}
 
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
@@ -65,8 +65,35 @@ class Student {
 	ESTIMATED TIME: 2 hours
 	*/
 	render() {
+		var studentRow = $("<tr>");
 
-	}
+		var studentName = $("<td>");
+		studentName.text(this.data.name);
+		this.domElements.name = studentName;
+		studentRow.append(studentName);
+
+		var studentCourse = $("<td>");
+		studentCourse.text(this.data.course);
+		this.domElements.course = studentCourse;
+		studentRow.append(studentCourse);
+
+		var studentGrade = $("<td>");
+		studentGrade.text(this.data.grade);
+		this.domElements.grade = studentGrade;
+		studentRow.append(studentGrade);
+
+		var studentOperations = $("<td>");
+		studentRow.append(studentOperations);
+		this.domElements.operations = studentOperations;
+
+		var deleteButton = $("<button>");
+		deleteButton.text("Delete");
+		deleteButton.click(this.handleDelete);
+		studentOperations.append(deleteButton);
+
+		this.domElements.row = studentRow;
+		return this.domElements.row;
+		}
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
 	purpose:
@@ -76,7 +103,8 @@ class Student {
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete() {
-
+		this.deleteCallback(this.data.id);
+		this.domElements.row.remove();
 	}
 
 	/* update - change a value in the student record
@@ -95,7 +123,27 @@ class Student {
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update() {
-
+	update(fieldToChange, valueToChangeTo) {
+		switch(fieldToChange){
+			case "id":
+				this.data.id = valueToChangeTo;
+				this.domElements.row.text(valueToChangeTo);
+				break;
+			case "name":
+				this.data.name = valueToChangeTo;
+				this.domElements.name.text(valueToChangeTo);
+				break;
+			case "course":
+				this.data.course = valueToChangeTo;
+				this.domElements.course.text(valueToChangeTo);
+				break;
+			case "grade":
+				this.data.grade = parseFloat(valueToChangeTo);
+				this.domElements.grade.text(valueToChangeTo);
+				break;
+			default:
+				return false;
+		}
+		return true;
 	}
 }
